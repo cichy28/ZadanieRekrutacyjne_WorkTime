@@ -5,34 +5,80 @@
 		"description": "Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.",
 		"version": "0.1.9"
 	},
-	"servers": [
+	"host": "localhost:3000",
+	"basePath": "",
+	"definitions": {
+		"id": {
+			"properties": {
+				"uuid": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"tags": [
 		{
-			"url": "http://api.example.com/v1",
-			"description": "Optional server description, e.g. Main (production) server"
-		},
-		{
-			"url": "http://staging-api.example.com",
-			"description": "Optional server description, e.g. Internal staging server for testing"
+			"name": "TimeCounter",
+			"description": "Aplikacja do śledzenia czasu pracy."
 		}
 	],
 	"paths": {
-		"/users": {
-			"get": {
-				"summary": "Returns a list of users.",
-				"description": "Optional extended description in CommonMark or HTML.",
+		"/users/{userId}/{command}/{description}": {
+			"parameters": [
+				{
+					"name": "userId",
+					"in": "path",
+					"required": true,
+					"description": "User ID",
+					"type": "string"
+				},
+				{
+					"name": "command",
+					"in": "path",
+					"required": true,
+					"description": "Commnad",
+					"type": "string"
+				},
+				{
+					"name": "description",
+					"in": "path",
+					"required": true,
+					"description": "description of task",
+					"type": "string"
+				}
+			],
+			"post": {
+				"tags": ["TimeCounter"],
+				"summary": "Starts time counting",
 				"responses": {
 					"200": {
-						"description": "A JSON array of user names",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "array",
-									"items": {
-										"type": "string"
-									}
-								}
-							}
-						}
+						"description": "Task started at: ???"
+					},
+					"400": {
+						"description": "Fail"
+					}
+				}
+			}
+		},
+		"/users/{userId}/data": {
+			"parameters": [
+				{
+					"name": "userId",
+					"in": "path",
+					"required": true,
+					"description": "User ID",
+					"type": "string"
+				}
+			],
+			"get": {
+				"tags": ["TimeCounter"],
+				"summary": "Get data from user ID",
+				"responses": {
+					"200": {
+						"description": "Ok"
+					},
+					"400": {
+						"description": "Fail"
 					}
 				}
 			}
