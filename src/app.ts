@@ -2,18 +2,14 @@ import * as _ from "lodash";
 import * as fs from "fs";
 import express, { Application, Request, Response } from "express";
 const app: Application = express();
-interface dataLog {
-	userId: String;
-	description: String;
-	timestamp?: Date;
-}
 
 app.get("/", async (req: Request, res: Response): Promise<Response> => {
 	return res.status(200).send({
-		message: "App is working - go /swagger/#/ for API doc",
+		message: "App is working ;)",
 	});
 });
 
+// Create user
 app.post("/users/:userId", async (req: Request, res: Response): Promise<Response> => {
 	try {
 		const fileHandeler = await fs.promises.open(`./user_data/${req.params.userId}`, "a+");
@@ -28,9 +24,11 @@ app.post("/users/:userId", async (req: Request, res: Response): Promise<Response
 	}
 });
 
+// Delete user
 app.delete("/users/:userId", async (req: Request, res: Response): Promise<Response> => {
 	try {
 		await fs.promises.unlink(`./user_data/${req.params.userId}`);
+		await fs.promises.unlink(`./user_data/${req.params.userId}_chart`);
 		return res.status(200).send({
 			message: "File deleted",
 		});
@@ -41,20 +39,21 @@ app.delete("/users/:userId", async (req: Request, res: Response): Promise<Respon
 	}
 });
 
+// Start/stop users activity
 app.post("/users/:userId/:command/:description", async (req: Request, res: Response): Promise<Response> => {
-	const timestamp = new Date().toISOString();
+	const timestamp = new Date(new Date().toUTCString());
 	const fileHandeler = await fs.promises.open(`./user_data/${req.params.userId}`, "a+");
 	const fileBuffer = await fs.promises.readFile(fileHandeler);
 	const file = fileBuffer.toString("utf-8").split("\n");
 	if (file.length <= 1) {
 		if (req.params.command === "start") {
-			appendData(req);
+			appendRawData(timestamp, req);
 			return res.status(200).send({
 				message: `Counting started at ${timestamp} with description: ${req.params.description} `,
 			});
 		}
 		if (req.params.command === "stop") {
-			appendData(req);
+			appendRawData(timestamp, req);
 			return res.status(200).send({
 				message: `First send start command`,
 			});
@@ -63,16 +62,15 @@ app.post("/users/:userId/:command/:description", async (req: Request, res: Respo
 	file.pop();
 	const lastRecord = file[file.length - 1].split(",");
 	const [lastTimestamp, lastComand, lastDescription] = lastRecord;
-	console.log(lastRecord);
-	console.log(lastComand);
 	if (lastComand === "stop" && req.params.command === "start") {
-		appendData(req);
+		appendRawData(timestamp, req);
 		return res.status(200).send({
 			message: `Counting started at ${lastTimestamp} with description: ${req.params.description} `,
 		});
 	}
 	if (lastComand === "start" && req.params.command === "stop") {
-		appendData(req);
+		appendRawData(timestamp, req);
+		appendChartData(timestamp, req, new Date(lastTimestamp));
 		return res.status(200).send({
 			message: `Counting stopped at ${lastTimestamp} with description: ${req.params.description} `,
 		});
@@ -92,51 +90,93 @@ app.post("/users/:userId/:command/:description", async (req: Request, res: Respo
 		message: `Invalid data`,
 	});
 
-	async function appendData(req: Request) {
-		const data: string = `${new Date().toISOString()},${req.params.command},${req.params.description}\n`;
+	async function appendRawData(timestamp: Date, req: Request) {
+		const data: string = `${timestamp.toISOString()},${req.params.command},${req.params.description}\n`;
 		const append = await fs.promises.appendFile(`./user_data/${req.params.userId}`, data);
 		return append;
+	}
+
+	async function appendChartData(timestamp: Date, req: Request, lastTimestamp: Date) {
+		const endDay = new Date(lastTimestamp);
+		endDay.setHours(0, 0, 0, 0);
+		const timeDiff = timestamp.getTime() - lastTimestamp.getTime();
+		const nextDayInMiliseconds = addDays(endDay, 1).getTime();
+		const saveDate = storeData(lastTimestamp);
+		let record = { date: saveDate, time: timeDiff, description: req.params.description };
+
+		// Check if start date and end date is the same
+		if (nextDayInMiliseconds > timestamp.getTime()) {
+			await fs.promises.appendFile(`./user_data/${req.params.userId}_chart`, JSON.stringify(record) + "\n");
+			return null;
+		}
+		// Split time to days
+		const timeDiffTillNextDayInMiliseconds = nextDayInMiliseconds - lastTimestamp.getTime();
+		let restOfMiliseconds = timeDiff - timeDiffTillNextDayInMiliseconds;
+
+		//Add data from start day
+		record.time = timeDiffTillNextDayInMiliseconds;
+		await fs.promises.appendFile(`./user_data/${req.params.userId}_chart`, JSON.stringify(record) + "\n");
+		let newDate = addDays(new Date(lastTimestamp.toDateString()), 1);
+
+		//Add data if work lasts more then one day
+		while (restOfMiliseconds > 86400000) {
+			record.time = 86400000;
+			restOfMiliseconds -= 86400000;
+			newDate = addDays(new Date(newDate.toDateString()), 1);
+			record.date = storeData(newDate);
+			await fs.promises.appendFile(`./user_data/${req.params.userId}_chart`, JSON.stringify(record) + "\n");
+		}
+
+		//Add data from end day
+		record.time = restOfMiliseconds;
+		newDate = addDays(new Date(lastTimestamp.toDateString()), 1);
+		record.date = storeData(newDate);
+		await fs.promises.appendFile(`./user_data/${req.params.userId}_chart`, JSON.stringify(record) + "\n");
+		return null;
 	}
 });
 
 app.get("/users/:userId/data", async (req: Request, res: Response): Promise<Response> => {
-	const fileHandeler = await fs.promises.open(`./user_data/${req.params.userId}`, "a+");
+	const checkFile = fs.existsSync(`./user_data/${req.params.userId}_chart`);
+	if (checkFile === false) {
+		return res.status(400).send({
+			message: `Invalid data`,
+		});
+	}
+	const fileHandeler = await fs.promises.open(`./user_data/${req.params.userId}_chart`, "r");
 	const fileBuffer = await fs.promises.readFile(fileHandeler);
 	fileHandeler.close();
-	const records = fileBuffer.toString("utf-8").split("\n");
-	const dataArray = records.map((x: string) => {
-		let result = x.split(",");
-		result.push(new Date(result[0]).getDate().toString());
-		result.push(new Date(result[0]).getTime().toString());
-		return result;
+	const records = fileBuffer.toString().split("\n");
+	records.pop();
+	let JsonData = records.map((x) => {
+		return JSON.parse(x);
 	});
-	const timestampsArray = _.chunk(dataArray, 2);
-	timestampsArray.map((x) => {
-		return x.reduce((prev, curr) => {
-			console.log(prev[0]);
-			console.log(curr[0]);
-			const startDayTillNextDay = Date.parse(prev[0].substring(0, 10)) + 1;
-			const endDay = Date.parse(curr[0].substring(0, 10));
-			console.log(startDayTillNextDay);
-			console.log(endDay);
-			const newElement = curr;
-			curr.push(String(Number(curr[4]) - Number(prev[4])));
-			return newElement;
+	let JsonDataGgrouped = _.groupBy(JsonData, (record) => record.date);
+	let result = [{}];
+	_.forEach(JsonDataGgrouped, (element, key) => {
+		let timeSum = 0;
+		_.forEach(element, (element2) => {
+			timeSum += element2.time;
 		});
+		let resultRecord: { date: string; time: number } = { date: key, time: timeSum };
+		result.push(resultRecord);
 	});
-	timestampsArray;
-	const chartData = [];
-	console.log(timestampsArray);
-	// dataArray.reduce((prev, curr): string[] => {
-	// 	let newElement: { start } = curr;
-	// 	if (prev[1] === "start" && curr[1] === "stop") {
-	// 		newElement[4] = prev[4];
-	// 	} else return newElement;
-	// });
-	return res.status(200).send({
-		message: "Hello World!",
-	});
+	return res.status(200).json(result);
 });
+
+function pad(d: number) {
+	return d < 10 ? "0" + d.toString() : d.toString();
+}
+
+function storeData(date: Date): string {
+	return `${date.getUTCFullYear()}.${pad(date.getMonth() + 1)}.${pad(date.getDate())}`;
+}
+
+function addDays(date: Date, days: number) {
+	var result = new Date(date);
+	result.setDate(result.getDate() + days);
+	return result;
+}
 
 export { app };
 

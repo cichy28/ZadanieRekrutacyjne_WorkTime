@@ -1,8 +1,7 @@
 {
 	"openapi": "3.0.0",
 	"info": {
-		"title": "Sample API",
-		"description": "Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.",
+		"title": "Zadanie rekrutacyjne",
 		"version": "0.1.9"
 	},
 	"host": "localhost:3000",
@@ -23,6 +22,41 @@
 		}
 	],
 	"paths": {
+		"/users/{userId}": {
+			"parameters": [
+				{
+					"name": "userId",
+					"in": "path",
+					"required": true,
+					"description": "User ID",
+					"type": "string"
+				}
+			],
+			"post": {
+				"tags": ["TimeCounter"],
+				"summary": "Create user with userID ",
+				"responses": {
+					"200": {
+						"description": "Ok"
+					},
+					"400": {
+						"description": "Fail"
+					}
+				}
+			},
+			"delete": {
+				"tags": ["TimeCounter"],
+				"summary": "Delete user with userID ",
+				"responses": {
+					"200": {
+						"description": "Ok"
+					},
+					"400": {
+						"description": "Fail"
+					}
+				}
+			}
+		},
 		"/users/{userId}/{command}/{description}": {
 			"parameters": [
 				{
@@ -36,23 +70,29 @@
 					"name": "command",
 					"in": "path",
 					"required": true,
-					"description": "Commnad",
-					"type": "string"
+					"description": "Commnad to start or stop timekeeping ",
+					"schema": {
+						"type": "string",
+						"enum": ["start", "stop"]
+					}
 				},
 				{
 					"name": "description",
 					"in": "path",
 					"required": true,
-					"description": "description of task",
+					"description": "Short description of started task (ony for start command)",
 					"type": "string"
 				}
 			],
 			"post": {
 				"tags": ["TimeCounter"],
-				"summary": "Starts time counting",
+				"summary": "Start or stop timekeeping for user with userID",
 				"responses": {
 					"200": {
-						"description": "Task started at: ???"
+						"description": "Ok"
+					},
+					"406": {
+						"description": "Request rejected"
 					},
 					"400": {
 						"description": "Fail"
@@ -72,13 +112,37 @@
 			],
 			"get": {
 				"tags": ["TimeCounter"],
-				"summary": "Get data from user ID",
+				"summary": "Get data from user. Valid only if at least one start/stop sequence had place",
 				"responses": {
 					"200": {
-						"description": "Ok"
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Activity_time"
+								}
+							}
+						}
 					},
 					"400": {
 						"description": "Fail"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"Activity_time": {
+				"type": "object",
+				"properties": {
+					"date": {
+						"type": "string",
+						"description": "Date of user activity"
+					},
+					"time": {
+						"type": "number",
+						"description": "Time of activity per day in ms"
 					}
 				}
 			}
