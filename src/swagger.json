@@ -57,7 +57,7 @@
 				}
 			}
 		},
-		"/users/{userId}/{command}/{description}": {
+		"/users/{command}/{userId}": {
 			"parameters": [
 				{
 					"name": "userId",
@@ -73,20 +73,28 @@
 					"description": "Commnad to start or stop timekeeping ",
 					"schema": {
 						"type": "string",
-						"enum": ["start", "stop"]
+						"enum": ["startUser", "stopUser"]
 					}
-				},
-				{
-					"name": "description",
-					"in": "path",
-					"required": true,
-					"description": "Short description of started task (ony for start command)",
-					"type": "string"
 				}
 			],
 			"post": {
 				"tags": ["TimeCounter"],
 				"summary": "Start or stop timekeeping for user with userID",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"desctiption": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
 				"responses": {
 					"200": {
 						"description": "Ok"

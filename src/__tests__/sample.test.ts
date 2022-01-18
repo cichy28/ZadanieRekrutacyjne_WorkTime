@@ -6,13 +6,17 @@ const userName = "test";
 const taskDesription1 = "Test description";
 const taskDesription2 = "Test description2";
 
-beforeAll(() => {
-	fs.promises.unlink(`./user_data/${userName}`);
-	fs.promises.unlink(`./user_data/${userName}_chart`);
+beforeAll(async () => {
+	try {
+		await fs.promises.unlink(`./user_data/${userName}`);
+		await fs.promises.unlink(`./user_data/${userName}_chart`);
+	} catch (e: any) {
+		console.error(e);
+	}
 });
 
 describe("Create a user", () => {
-	it("should return a 200 status code", async () => {
+	it("Should return a 200 status code and should create new file", async () => {
 		const response = await request(app).post(`/users/${userName}`).send();
 		const checkFile = fs.existsSync(`./user_data/${userName}`);
 		expect(checkFile).toBe(true);
@@ -21,7 +25,7 @@ describe("Create a user", () => {
 });
 
 describe("Start the user", () => {
-	it("should return a 200 status code", async () => {
+	it("Should return a 200 status code and should add new record", async () => {
 		const response = await request(app).post(`/users/${userName}/start/${taskDesription1}`).send();
 		const fileBuffer = await fs.promises.readFile(`./user_data/${userName}`);
 		const file = fileBuffer.toString("utf-8").split("\n");
@@ -33,7 +37,7 @@ describe("Start the user", () => {
 });
 
 describe("Start the same user again", () => {
-	it("should return a 406 status code", async () => {
+	it("Should return a 406 status code and shouldnt add new record", async () => {
 		const response = await request(app).post(`/users/${userName}/start/${taskDesription2}`).send();
 		const fileBuffer = await fs.promises.readFile(`./user_data/${userName}`);
 		const file = fileBuffer.toString("utf-8").split("\n");
@@ -45,7 +49,7 @@ describe("Start the same user again", () => {
 });
 
 describe("Stop the user", () => {
-	it("should return a 200 status code", async () => {
+	it("Should return a 200 status code and add new record", async () => {
 		await setTimeout(() => {}, 1000);
 		const response = await request(app).post(`/users/${userName}/stop/${taskDesription1}`).send();
 		const fileBuffer = await fs.promises.readFile(`./user_data/${userName}`);
@@ -60,7 +64,7 @@ describe("Stop the user", () => {
 });
 
 describe("Stop the same user again", () => {
-	it("should return a 406 status code", async () => {
+	it("Should return a 406 status code and should not add new record", async () => {
 		const response = await request(app).post(`/users/${userName}/stop/${taskDesription2}`).send();
 		const fileBuffer = await fs.promises.readFile(`./user_data/${userName}`);
 		const file = fileBuffer.toString("utf-8").split("\n");
@@ -72,7 +76,7 @@ describe("Stop the same user again", () => {
 });
 
 describe("Get data about user", () => {
-	it("should return a 200 status code", async () => {
+	it("Should return a 200 status code and send proper data", async () => {
 		const response = await request(app).get(`/users/${userName}/data`).send();
 		const fileBuffer = await fs.promises.readFile(`./user_data/${userName}`);
 		const file = fileBuffer.toString("utf-8").split("\n");
@@ -85,8 +89,8 @@ describe("Get data about user", () => {
 	});
 });
 
-describe("delete user", () => {
-	it("should return a 200 status code", async () => {
+describe("Delete the user", () => {
+	it("Should return a 200 status code and delete 2 files", async () => {
 		const response = await request(app).delete(`/users/${userName}`).send();
 		const checkFile1 = fs.existsSync(`./user_data/${userName}`);
 		const checkFile2 = fs.existsSync(`./user_data/${userName}_chart`);

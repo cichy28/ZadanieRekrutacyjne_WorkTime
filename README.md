@@ -31,6 +31,6 @@ npm test
 
 -  start/stop timestamps stored as UTC
 
--  API doc made in Swagger http://localhost:3000/swagger/#
+-  API doc made in Swagger http://localhost:3000/api-docs
 
 -  tests made in JEST
