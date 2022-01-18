@@ -21,3 +21,30 @@ routes.post("/:userId", async (req: TypedRequestBody<{ userId: string }>, res: R
 });
 
 module.exports = routes;
+/**
+ * @swagger
+ * /users/stopUser/{userId}:
+ *   post:
+ *     summary: Create a user.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: ID of user.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               description:
+ *                 type: string
+ *                 description: Descrription of task.
+ *                 example: Coding...
+ *     responses:
+ *       200:
+ *         description: Stopped.
+ */

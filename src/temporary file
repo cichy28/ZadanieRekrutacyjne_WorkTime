@@ -1,0 +1,83 @@
+---
+"/users/{userId}":
+   parameters:
+      - name: userId
+        in: path
+        required: true
+        description: User ID
+        type: string
+   post:
+      tags:
+         - TimeCounter
+      summary: "Create user with userID "
+      responses:
+         "200":
+            description: Ok
+         "400":
+            description: Fail
+   delete:
+      tags:
+         - TimeCounter
+      summary: "Delete user with userID "
+      responses:
+         "200":
+            description: Ok
+         "400":
+            description: Fail
+"/users/{command}/{userId}":
+   parameters:
+      - name: userId
+        in: path
+        required: true
+        description: User ID
+        type: string
+      - name: command
+        in: path
+        required: true
+        description: "Commnad to start or stop timekeeping "
+        schema:
+           type: string
+           enum:
+              - startUser
+              - stopUser
+   post:
+      tags:
+         - TimeCounter
+      summary: Start or stop timekeeping for user with userID
+      requestBody:
+         required: true
+         content:
+            application/json:
+               schema:
+                  type: object
+                  properties:
+                     desctiption:
+                        type: string
+      responses:
+         "200":
+            description: Ok
+         "400":
+            description: Fail
+         "406":
+            description: Request rejected
+"/users/{userId}/data":
+   parameters:
+      - name: userId
+        in: path
+        required: true
+        description: User ID
+        type: string
+   get:
+      tags:
+         - TimeCounter
+      summary: Get data from user. Valid only if at least one start/stop sequence had
+         place
+      responses:
+         "200":
+            description: Ok
+            content:
+               application/json:
+                  schema:
+                     "$ref": "#/components/schemas/Activity_time"
+         "400":
+            description: Fail

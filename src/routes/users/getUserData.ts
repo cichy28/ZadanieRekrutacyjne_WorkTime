@@ -36,3 +36,25 @@ routes.get("/:userId", async (req: Request, res: Response): Promise<Response> =>
 });
 
 module.exports = routes;
+
+/**
+ * @swagger
+ * /users/{userId}:
+ *   get:
+ *     summary: Get data for chart.
+ *     description: Take data about user activity..
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: ID of user.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               "$ref": "#/components/schemas/Activity_time"
+ */

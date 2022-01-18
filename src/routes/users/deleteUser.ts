@@ -21,3 +21,20 @@ routes.delete("/:userId", async (req: TypedRequestBody<{ userId: string }>, res:
 });
 
 module.exports = routes;
+
+/**
+ * @swagger
+ * /users/deleteUser/{userId}:
+ *   post:
+ *     summary: Create the user.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: ID of user.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User deleted sucsessfully.
+ */
