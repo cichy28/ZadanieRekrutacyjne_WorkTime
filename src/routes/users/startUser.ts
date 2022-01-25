@@ -6,41 +6,33 @@ import * as fs from "fs";
 const routes = express.Router({ mergeParams: true });
 
 // Start/stop users activity
-routes.post("/:userId", async (req: Request, res: Response): Promise<Response> => {
-	console.log(req.body);
+routes.post("/:userId", async (req: CommandRequest, res: Response): Promise<Response> => {
 	const description = req.body.description;
 	const timestamp = new Date(new Date().toUTCString());
 	const fileHandeler = await fs.promises.open(`./user_data/${req.params.userId}`, "a+");
 	const fileBuffer = await fs.promises.readFile(fileHandeler);
-	const file = fileBuffer.toString("utf-8").split("\n");
-	if (file.length <= 1) {
-		if (req.params.command === "start") {
-			appendRawData(timestamp, req);
-			return res.status(200).send({
-				message: `Counting started at ${timestamp} with description: ${req.params.description} `,
-			});
-		}
-		if (req.params.command === "stop") {
-			appendRawData(timestamp, req);
-			return res.status(200).send({
-				message: `First send start command`,
-			});
-		}
+	const recordsInFile = fileBuffer.toString("utf-8").split("\n");
+	if (recordsInFile.length <= 1) {
+		appendRawData(timestamp, req);
+		recordsInFile.pop();
+		return res.status(200).send({
+			message: `Counting started at ${timestamp} with description: ${req.body.description} `,
+		});
 	}
-	file.pop();
-	const lastRecord = file[file.length - 1].split(",");
+
+	const lastRecord = recordsInFile[recordsInFile.length - 1].split(",");
 	const [lastTimestamp, lastComand, lastDescription] = lastRecord;
 	if (lastComand === "stop" && req.params.command === "start") {
 		appendRawData(timestamp, req);
 		return res.status(200).send({
-			message: `Counting started at ${lastTimestamp} with description: ${req.params.description} `,
+			message: `Counting started at ${lastTimestamp} with description: ${req.body.description} `,
 		});
 	}
 	if (lastComand === "start" && req.params.command === "stop") {
 		appendRawData(timestamp, req);
 		appendChartData(timestamp, req, new Date(lastTimestamp));
 		return res.status(200).send({
-			message: `Counting stopped at ${lastTimestamp} with description: ${req.params.description} `,
+			message: `Counting stopped at ${lastTimestamp} with description: ${req.body.description} `,
 		});
 	}
 	if (lastComand === "start" && req.params.command === "start") {
@@ -59,7 +51,7 @@ routes.post("/:userId", async (req: Request, res: Response): Promise<Response> =
 	});
 
 	async function appendRawData(timestamp: Date, req: CommandRequest) {
-		const data: string = `${timestamp.toISOString()},${req.params.command},${req.params.description}\n`;
+		const data: string = `${timestamp.toISOString()},${req.params.command},${req.body.description}\n`;
 		const append = await fs.promises.appendFile(`./user_data/${req.params.userId}`, data);
 		return append;
 	}
@@ -70,7 +62,7 @@ routes.post("/:userId", async (req: Request, res: Response): Promise<Response> =
 		const timeDiff = timestamp.getTime() - lastTimestamp.getTime();
 		const nextDayInMiliseconds = addDays(endDay, 1).getTime();
 		const saveDate = storeData(lastTimestamp);
-		let record = { date: saveDate, time: timeDiff, description: req.params.description };
+		let record = { date: saveDate, time: timeDiff, description: req.body.description };
 
 		// Check if start date and end date is the same
 		if (nextDayInMiliseconds > timestamp.getTime()) {

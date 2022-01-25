@@ -1,5 +1,6 @@
 import express, { Response } from "express";
 import { TypedRequestBody, CommandRequest } from "../../app_model";
+import UserModel from "../../model/users";
 import * as fs from "fs";
 
 const routes = express.Router({ mergeParams: true });
@@ -24,6 +25,22 @@ routes.post("/:userId", async (req: TypedRequestBody<{ userId: string }>, res: R
 	try {
 		const fileHandeler = await fs.promises.open(`./user_data/${req.params.userId}`, "a+");
 		fileHandeler.close();
+
+		// test
+		const newRecord = new UserModel({
+			name: "JC",
+			email: "test",
+			avatar: "asdasa",
+		});
+		newRecord
+			.save()
+			.then(() => {
+				console.log("udalo sie");
+			})
+			.catch(() => {
+				console.log("huston");
+			});
+
 		return res.status(200).send({
 			message: "File created",
 		});

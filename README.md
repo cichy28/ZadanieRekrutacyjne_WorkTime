@@ -34,3 +34,5 @@ npm test
 -  API doc made in Swagger http://localhost:3000/api-docs
 
 -  tests made in JEST
+
+-  data in mongoDB Atlas user:test pass:test123

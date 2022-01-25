@@ -1,5 +1,5 @@
 import request from "supertest";
-import { app } from "../app";
+import app from "../app";
 import * as fs from "fs";
 
 const userName = "test";
@@ -10,14 +10,15 @@ beforeAll(async () => {
 	try {
 		await fs.promises.unlink(`./user_data/${userName}`);
 		await fs.promises.unlink(`./user_data/${userName}_chart`);
+		await console.log(`All test files deleted`);
 	} catch (e: any) {
-		console.error(e);
+		console.log("At least one test file does not exist");
 	}
 });
 
 describe("Create a user", () => {
 	it("Should return a 200 status code and should create new file", async () => {
-		const response = await request(app).post(`/users/${userName}`).send();
+		const response = await request(app).post(`/users/createUser/${userName}`).send();
 		const checkFile = fs.existsSync(`./user_data/${userName}`);
 		expect(checkFile).toBe(true);
 		expect(response.statusCode).toBe(200);
@@ -26,7 +27,7 @@ describe("Create a user", () => {
 
 describe("Start the user", () => {
 	it("Should return a 200 status code and should add new record", async () => {
-		const response = await request(app).post(`/users/${userName}/start/${taskDesription1}`).send();
+		const response = await request(app).post(`/users/startUser/`).send({ description: taskDesription1 });
 		const fileBuffer = await fs.promises.readFile(`./user_data/${userName}`);
 		const file = fileBuffer.toString("utf-8").split("\n");
 		file.pop();
@@ -39,7 +40,7 @@ describe("Start the user", () => {
 describe("Start the same user again", () => {
 	it("Should return a 406 status code and shouldnt add new record", async () => {
 		const response = await request(app).post(`/users/${userName}/start/${taskDesription2}`).send();
-		const fileBuffer = await fs.promises.readFile(`./user_data/${userName}`);
+		const fileBuffer = await fs.promises.readFile(`../user_data/${userName}`);
 		const file = fileBuffer.toString("utf-8").split("\n");
 		file.pop();
 		const record = file[file.length - 1].split(",");

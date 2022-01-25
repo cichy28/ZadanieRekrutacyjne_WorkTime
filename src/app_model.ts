@@ -3,6 +3,8 @@ export interface TypedRequestBody<T> extends Express.Request {
 }
 
 export interface CommandRequest extends Express.Request {
-	params: { userId: string; command: string; description: string };
+	params: { userId: string; command: string };
+	body: {
+		description: string;
+	};
 }
-
