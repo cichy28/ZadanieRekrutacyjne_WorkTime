@@ -1,23 +1,33 @@
 import express, { Router, Application, Request, Response } from "express";
-import { resourceLimits } from "worker_threads";
-import { TypedRequestBody, CommandRequest } from "../../app_model";
-import * as fs from "fs";
+import { CommandRequest } from "../../app_model";
+import commandModel from "../../mongoDb/model/users";
 
 const routes = express.Router({ mergeParams: true });
 
-// Create user
-routes.post("/:userId", async (req: TypedRequestBody<{ userId: string }>, res: Response): Promise<Response> => {
-	try {
-		const fileHandeler = await fs.promises.open(`./user_data/${req.params.userId}`, "a+");
-		fileHandeler.close();
-		return res.status(200).send({
-			message: "File created",
-		});
-	} catch (error) {
-		return res.status(400).send({
-			message: "There was an error:" + error,
-		});
+routes.post("/:userId", async (req: CommandRequest, res: Response): Promise<Response> => {
+	let responseObject = {
+		message: "Invalid data",
+		dbResponse: {},
+	};
+	const newRecord = new commandModel({
+		name: req.params.userId,
+		command: "stopUser",
+		description: req.body.description,
+	});
+	const lastRecord = await commandModel.findOne({ name: req.params.userId }).sort({ createdAt: "desc" });
+
+	if (lastRecord === null || lastRecord.command === "stopUser") {
+		responseObject.message = `User ${req.params.userId} is not started`;
+		return res.status(406).send(responseObject);
 	}
+
+	if (lastRecord.command === "startUser") {
+		responseObject.dbResponse = await newRecord.save();
+		responseObject.message = `User ${req.params.userId} stopped`;
+		return res.status(200).send(responseObject);
+	}
+
+	return res.status(406).send(responseObject);
 });
 
 module.exports = routes;
@@ -25,7 +35,7 @@ module.exports = routes;
  * @swagger
  * /users/stopUser/{userId}:
  *   post:
- *     summary: Create a user.
+ *     summary: Stop.
  *     parameters:
  *       - in: path
  *         name: userId
