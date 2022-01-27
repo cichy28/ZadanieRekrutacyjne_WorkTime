@@ -10,17 +10,17 @@ routes.get("/:userId", async (req: Request, res: Response): Promise<Response> =>
 		message: "Invalid data",
 		dbResponse: {},
 	};
-	const rawData = await commandModel.find({ name: req.params.userId }).sort({ createdAt: "desc" });
+	const rawData = await commandModel
+		.find({ name: req.params.userId, $or: [{ command: "startUser" }, { command: "stopUser" }] })
+		.sort({ createdAt: "desc" });
 
 	// Tu sth is not yes - można lepiej
-	const agregatedData = [];
-	for (let i = 0; i < rawData.length; i += 2) {
-		let newElement = {};
-		Object.assign(newElement, rawData[i]);
-		newElement["TimeDiff"] = rawData[i].createdAt - rawData[i + 1].createdAt;
-		agregatedData.push(newElement);
-	}
-	console.log(agregatedData);
+	console.log(rawData);
+	let memo = [];
+	rawData.map((element, key) => {
+		console.log(key);
+	});
+
 	responseObject.dbResponse = rawData;
 	responseObject.message = `Ta da`;
 	return res.status(406).send(responseObject);

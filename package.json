@@ -5,7 +5,8 @@
 	"main": "server.js",
 	"scripts": {
 		"dev_start": "ts-node-dev --transpile-only ./src/app.ts",
-		"test": "npx jest"
+		"test_dataParser": "npx jest dataParser.test",
+		"test_all": "npx jest"
 	},
 	"author": "Jan Cichosz",
 	"license": "ISC",
