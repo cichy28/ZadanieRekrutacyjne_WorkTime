@@ -1,5 +1,5 @@
 import express, { Router, Application, Request, Response } from "express";
-import { TypedRequestBody, CommandRequest } from "../app_model";
+import { TypedRequestBody, CommandRequest } from "../types/routes.types";
 
 const mainRouter = express.Router({ mergeParams: true });
 
@@ -7,13 +7,9 @@ const startUser = require("./users/startUser");
 const stopUser = require("./users/stopUser");
 const getUserData = require("./users/getUserData");
 
-const info = require("./settings/info");
-
 mainRouter.use("/users/startUser", startUser);
 mainRouter.use("/users/stopUser", stopUser);
 mainRouter.use("/users/getUserData", getUserData);
-
-mainRouter.use("settings/info", info);
 
 mainRouter.get("/", async (req: TypedRequestBody<{ userId: string }>, res: Response): Promise<Response> => {
 	return res.status(200).send({
