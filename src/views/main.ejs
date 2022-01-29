@@ -1,29 +1,20 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<title>MVC</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link
-			href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
-			rel="stylesheet"
-			id="bootstrap-css"
-		/>
-		<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	</head>
+	<%- include('./partials/head.ejs')  %> 
 	<body>
-		<!-- Just an image -->
-		<nav class="navbar navbar-light bg-light">
-			<a class="navbar-brand" href="#">
-				<img
-					src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg"
-					width="30"
-					height="30"
-					alt=""
-				/>
-			</a>
-		</nav>
+		<div >
+			<%- include('./partials/title.ejs')  %> 
+			<div class="create-blog content">
+				<form>
+					<label for="user">User name:</label>
+					<input type="text" id="user" required />
+					<label for="description">Task description:</label>
+					<input type="text" id="description" required /></form><br>
+					<button >Start</button>
+					<button>Stop</button><br>
+				</form>
+			</div>
+			<%- include('./partials/foot.ejs')  %> 
+		</div>
 	</body>
 </html>

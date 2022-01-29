@@ -23,6 +23,10 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(bodyParser.json({ extended: true }));
 app.use("", mainRouter);
 
+// View engine
+app.set("view engine", "ejs");
+app.set("views", "./src/views");
+
 // MongoDB
 const uri = "mongodb+srv://JC:JC123@cluster0.of2pn.mongodb.net/Recrutation_Task1?retryWrites=true&w=majority";
 
