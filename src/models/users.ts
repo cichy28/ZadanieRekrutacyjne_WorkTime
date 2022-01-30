@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 interface Command {
 	name: string;
 	command: string;
-	description?: string;
+	description: string;
 }
 
 // 2. Create a Schema corresponding to the document interface.

@@ -1,8 +1,8 @@
 import express from "express";
-import startUser from "../../controllers/users/startUserController";
+import setUserData from "../../controllers/users/setUserDataController";
 
 const routes = express.Router({ mergeParams: true });
-routes.post("/:userId", startUser);
+routes.post("/", setUserData);
 module.exports = routes;
 
 /**

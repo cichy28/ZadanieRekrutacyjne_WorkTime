@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html>
-	<%- include('./partials/head.ejs')  %> 
+	<%- include('./partials/head.ejs') %>
 	<body>
-		<div >
-			<%- include('./partials/title.ejs')  %> 
-			<div class="create-blog content">
-				<form>
+		<div>
+			<%- include('./partials/nav.ejs') %>
+			<div class="main-style content">
+				<form action="/users/setUserData" method="post">
 					<label for="user">User name:</label>
-					<input type="text" id="user" required />
+					<input type="text" id="userId" required name="userId" />
 					<label for="description">Task description:</label>
-					<input type="text" id="description" required /></form><br>
-					<button >Start</button>
-					<button>Stop</button><br>
+					<input type="text" id="description" required name="description" /><br />
+					<label for="command">Task command:</label>
+					<input type="text" list="commandsList" id="command" required name="command" /><br />
+					<datalist id="commandsList">
+						<option value="startUser"></option>
+						<option value="stopUser"></option>
+					</datalist>
+					<button id="submit">send</button><br />
+				</form>
+				<form action="/users/getUserData" method="get">
+					<label for="user">User name:</label>
+					<input type="text" id="userId" required name="userId" />
+					<button id="getDataButton">Get data</button><br />
 				</form>
 			</div>
-			<%- include('./partials/foot.ejs')  %> 
+			<%- include('./partials/foot.ejs') %>
 		</div>
 	</body>
 </html>

@@ -1,18 +1,14 @@
 import express, { Router, Application, Request, Response } from "express";
-import morgan from "morgan";
+
 import { TypedRequestBody, CommandRequest } from "../types/routes.types";
 
 const mainRouter = express.Router({ mergeParams: true });
 
-const startUser = require("./users/startUser");
-const stopUser = require("./users/stopUser");
+const setUserData = require("./users/setUserData");
 const getUserData = require("./users/getUserData");
 
-// Logger
-mainRouter.use(morgan("dev"));
-mainRouter.use(express.static("public"));
-mainRouter.use("/users/startUser", startUser);
-mainRouter.use("/users/stopUser", stopUser);
+// Endppoints
+mainRouter.use("/users/setUserData", setUserData);
 mainRouter.use("/users/getUserData", getUserData);
 
 mainRouter.get("/", (req, res) => {
@@ -20,7 +16,8 @@ mainRouter.get("/", (req, res) => {
 });
 
 mainRouter.use("", (req, res) => {
-	res.send(404);
+	console.log("No enpoint like this");
+	res.sendStatus(404);
 });
 
 module.exports = mainRouter;

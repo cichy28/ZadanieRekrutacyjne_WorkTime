@@ -2,7 +2,7 @@ import express from "express";
 import getUserData from "../../controllers/users/getUserDataController";
 
 const routes = express.Router({ mergeParams: true });
-routes.get("/:userId", getUserData);
+routes.get("/", getUserData);
 module.exports = routes;
 
 /**

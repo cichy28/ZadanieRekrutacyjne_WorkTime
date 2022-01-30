@@ -1,9 +1,9 @@
 import express from "express";
 import mongoose from "mongoose";
 import swaggerUi from "swagger-ui-express";
+import morgan from "morgan";
 
 const { MongoClient } = require("mongodb");
-const bodyParser = require("body-parser");
 const mainRouter = require("./routes/mainRouter");
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerDefinition = require("./swagger.json");
@@ -19,8 +19,14 @@ const swaggerSpec = swaggerJSDoc(options);
 // Express
 const port = 3000;
 const app = express();
+// Docs
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use(bodyParser.json({ extended: true }));
+// Logger
+app.use(morgan("dev"));
+// Public files
+app.use(express.static("public"));
+// Encoding
+app.use(express.urlencoded({ extended: true }));
 app.use("", mainRouter);
 
 // View engine

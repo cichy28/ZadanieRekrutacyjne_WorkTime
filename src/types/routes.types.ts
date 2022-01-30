@@ -3,8 +3,9 @@ export interface TypedRequestBody<T> extends Express.Request {
 }
 
 export interface CommandRequest extends Express.Request {
-	params: { userId: string; command: string };
 	body: {
-		description: string;
+		userId: string;
+		description?: string;
+		command: "startUser" | "stopUser";
 	};
 }
