@@ -13,6 +13,7 @@ const getUserData = async (req: Request, res: Response): Promise<Response> => {
 
 	responseObject.dbResponse = rawData;
 	responseObject.message = `Ta da`;
-	return res.status(200).send(responseObject);
+	res.render("chart", { title: "Main paige", buttons: true });
+	return res.status(200);
 };
 export default getUserData;
