@@ -5,6 +5,7 @@ interface Command {
 	name: string;
 	command: string;
 	description: string;
+	timestamp: Date;
 }
 
 // 2. Create a Schema corresponding to the document interface.
@@ -13,6 +14,7 @@ const commandSchema = new mongoose.Schema<Command>(
 		name: { type: String, required: true },
 		command: { type: String, required: true },
 		description: { type: String, required: false },
+		timestamp: { type: Date, required: true },
 	},
 	{ timestamps: true }
 );

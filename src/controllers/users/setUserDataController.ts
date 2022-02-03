@@ -17,6 +17,7 @@ const startUser = async (req: CommandRequest, res: Response): Promise<Response> 
 		name: req.body.userId,
 		command: req.body.command,
 		description: req.body.description,
+		timestamp: Date(),
 	});
 	const lastRecord = await commandModel.findOne({ name: req.body.userId }).sort({ createdAt: "desc" });
 
@@ -43,6 +44,7 @@ const stopUser = async (req: CommandRequest, res: Response): Promise<Response> =
 		name: req.body.userId,
 		command: "stopUser",
 		description: req.body.description,
+		timestamp: Date(),
 	});
 	const lastRecord = await commandModel.findOne({ name: req.body.userId }).sort({ createdAt: "desc" });
 

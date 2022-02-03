@@ -70,12 +70,12 @@ class DataParser {
 		};
 	}
 
-	private sameDayButMidnight(date: Date) {
+	public sameDayButMidnight(date: Date) {
 		let midnight: Date = _.cloneDeep(date);
-		midnight.setHours(24);
-		midnight.setMinutes(0);
-		midnight.setSeconds(0);
-		midnight.setMilliseconds(0);
+		midnight.setUTCHours(24);
+		midnight.setUTCMinutes(0);
+		midnight.setUTCSeconds(0);
+		midnight.setUTCMilliseconds(0);
 		return midnight;
 	}
 
