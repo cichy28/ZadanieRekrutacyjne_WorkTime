@@ -27,14 +27,14 @@ app.use(morgan("dev"));
 app.use(express.static("public"));
 // Encoding
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use("", mainRouter);
-
 // View engine
 app.set("view engine", "ejs");
 app.set("views", "./src/views");
-
 // MongoDB
 const uri = "mongodb+srv://JC:JC123@cluster0.of2pn.mongodb.net/Recrutation_Task1?retryWrites=true&w=majority";
+// Run python script
 
 const startApp = async (): Promise<any> => {
 	try {

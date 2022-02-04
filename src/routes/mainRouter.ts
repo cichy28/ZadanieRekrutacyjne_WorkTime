@@ -4,12 +4,14 @@ import { TypedRequestBody, CommandRequest } from "../types/routes.types";
 
 const mainRouter = express.Router({ mergeParams: true });
 
-const setUserData = require("./users/setUserData");
 const getUserData = require("./users/getUserData");
+const loadTestingData = require("./users/loadTestingData");
+const setUserData = require("./users/setUserData");
 
 // Endppoints
-mainRouter.use("/users/setUserData", setUserData);
 mainRouter.use("/users/getUserData", getUserData);
+mainRouter.use("/users/loadTestingData", loadTestingData);
+mainRouter.use("/users/setUserData", setUserData);
 
 mainRouter.get("/", (req, res) => {
 	res.render("main", { title: "Main paige", buttons: true });

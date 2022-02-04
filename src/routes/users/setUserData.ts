@@ -7,7 +7,7 @@ module.exports = routes;
 
 /**
  * @swagger
- * /users/startUser/{userId}:
+ * /users/setUserData/{userId}:
  *   post:
  *     summary: Start.
  *     parameters:
