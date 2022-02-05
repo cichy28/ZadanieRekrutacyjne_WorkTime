@@ -1,21 +1,16 @@
-enum SplitInterval {
-	Hour,
-	Day,
-	Month,
-}
-
-interface splitTimeObject {
-	object: {};
-	beginDate: Date;
-	endDate: Date;
-	splitInterval: SplitInterval;
-}
 import * as _ from "lodash";
+import { splitTimeObject } from "../types/main.types";
+
 class DataParser {
 	constructor() {}
 
-	public splitArrayToArrayOfArrays(array: Array<{}>, numberOfElementsInArray: number): Array<Array<{}>> | null {
-		if (array.length <= numberOfElementsInArray) return null;
+	public splitArrayToArrayOfArrays<T>(array: Array<T>, numberOfElementsInArray: number): Array<Array<T>> | null {
+		if (array.length < numberOfElementsInArray) return null;
+		if (array.length === numberOfElementsInArray) {
+			const result = [];
+			result.push(array);
+			return result;
+		}
 		const resultArray = [];
 		for (let index = 0; index < array.length - numberOfElementsInArray; index += numberOfElementsInArray) {
 			let resultArray2 = [];

@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import Ajv, { JSONSchemaType } from "ajv";
+
+const ajv = new Ajv();
 
 // 1. Create an interface representing a document in MongoDB.
 interface command {
@@ -8,7 +11,26 @@ interface command {
 	timestamp: string;
 }
 
-// 2. Create a Schema corresponding to the document interface.
+// 2. Create a validation schema - AJV.
+
+const schema: JSONSchemaType<command> = {
+	type: "object",
+	properties: {
+		name: { type: "string" },
+		command: { type: "string" },
+		description: { type: "string" },
+		timestamp: { type: "string" },
+	},
+	required: ["name", "command", "timestamp"],
+	additionalProperties: false,
+};
+
+// 3. Create validation function - AJV
+
+const isCommand = ajv.compile(schema);
+
+// 4. Create a Schema corresponding to the document interfac - MongoDB.
+
 const commandSchema = new mongoose.Schema<command>(
 	{
 		name: { type: String, required: true },
@@ -19,14 +41,9 @@ const commandSchema = new mongoose.Schema<command>(
 	{ timestamps: true }
 );
 
-// NOTE: methods must be added to the schema before compiling it with mongoose.model()
-commandSchema.methods.test = function test() {
-	const greeting = this.name ? "Meow name is " + this.name : "I don't have a name";
-	console.log(greeting);
-};
+// 5. Create a Model - MongoDB
 
-// 3. Create a Model.
 const commandModel = mongoose.model<command>("Commands", commandSchema);
 
-export { command };
+export { command, isCommand };
 export default commandModel;

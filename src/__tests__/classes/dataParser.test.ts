@@ -3,6 +3,9 @@ import DataParser from "../../classes/dataparser";
 const dataParser = new DataParser();
 
 describe("splitArrayToArrayOfArrays", () => {
+	it("Should nest the array", () => {
+		expect(dataParser.splitArrayToArrayOfArrays([{ a: 1 }, { a: 2 }], 2)).toEqual([[{ a: 1 }, { a: 2 }]]);
+	});
 	it("Should split array", () => {
 		expect(dataParser.splitArrayToArrayOfArrays([{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }], 2)).toEqual([
 			[{ a: 1 }, { a: 2 }],
@@ -28,14 +31,12 @@ describe("splitTimeObjectToArrayOfObjects", () => {
 				object: { a: 1 },
 				beginDate: new Date("2022-01-24T00:00:01.000+00:00"),
 				endDate: new Date("2022-01-24T23:59:00.000+00:00"),
-				splitInterval: 1,
 			})
 		).toEqual([
 			{
 				object: { a: 1 },
 				beginDate: new Date("2022-01-24T00:00:01.000+00:00"),
 				endDate: new Date("2022-01-24T23:59:00.000+00:00"),
-				splitInterval: 1,
 			},
 		]);
 	});
@@ -45,26 +46,22 @@ describe("splitTimeObjectToArrayOfObjects", () => {
 				object: { a: 1 },
 				beginDate: start,
 				endDate: stop,
-				splitInterval: 1,
 			})
 		).toEqual([
 			{
 				object: { a: 1 },
 				beginDate: new Date("2022-01-24T10:00:00.000+00:00"),
 				endDate: new Date("2022-01-25T00:00:00.000+00:00"),
-				splitInterval: 1,
 			},
 			{
 				object: { a: 1 },
 				beginDate: new Date("2022-01-25T00:00:00.000+00:00"),
 				endDate: new Date("2022-01-26T00:00:00.000+00:00"),
-				splitInterval: 1,
 			},
 			{
 				object: { a: 1 },
 				beginDate: new Date("2022-01-26T00:00:00.000+00:00"),
 				endDate: new Date("2022-01-26T12:00:00.000+00:00"),
-				splitInterval: 1,
 			},
 		]);
 	});

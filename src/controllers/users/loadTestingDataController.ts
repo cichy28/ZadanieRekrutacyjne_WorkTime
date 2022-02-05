@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { CommandRequest } from "../../types/routes.types";
 import commandModel from "../../models/users";
-import { command } from "../../models/users";
+import { isCommand, command } from "../../models/users";
+import { isArray } from "lodash";
 
 const loadTestingData = async (req: Request, res: Response): Promise<Response> => {
 	let responseObject = {
@@ -9,18 +10,15 @@ const loadTestingData = async (req: Request, res: Response): Promise<Response> =
 		dbResponse: {},
 	};
 
-	let newRecord = new commandModel({
-		name: req.body.name,
-		command: "startUser",
-		description: "test",
-		timestamp: "",
-	});
-
+	if (!isArray(req.body)) return res.send("Its not an array").status(400);
 	for (const element of req.body) {
-		Object.assign(newRecord, element);
+		if (!isCommand(element)) return res.send(`Incorrect object - ${JSON.stringify(element)}`).status(400);
+	}
+	for (const element of req.body) {
+		let newRecord = new commandModel(element);
 		await newRecord.save();
 	}
-	return res.status(200).send("Ales gute?");
+	return res.status(200).send("Data uploaded correctly");
 };
 
 export default loadTestingData;

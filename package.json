@@ -11,6 +11,7 @@
 	"author": "Jan Cichosz",
 	"license": "ISC",
 	"dependencies": {
+		"ajv": "^8.10.0",
 		"ejs": "^3.1.6",
 		"express": "^4.17.2",
 		"lodash": "^4.17.21",
