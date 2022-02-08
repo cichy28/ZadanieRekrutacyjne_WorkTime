@@ -9,7 +9,7 @@ const dataParser = new DataParser();
 
 type chartType = { x: string[]; y: number[]; type: string }[] | null;
 
-async function prepareChartData(req: Request, res: Response): chartType {
+async function prepareChartData(req: Request, res: Response) {
 	let rawData = await commandModel
 		.find(
 			{ $and: [{ userId: req.query.userId }], $or: [{ command: "startUser" }, { command: "stopUser" }] },
@@ -20,8 +20,7 @@ async function prepareChartData(req: Request, res: Response): chartType {
 		.catch((error) => {
 			console.log(error);
 		});
-
-	if (rawData.length <= 0) return null;
+	if (rawData === undefined || rawData.length <= 0) return null;
 	const data = dataParser.splitArrayToArrayOfArrays(rawData, 2);
 	if (data === null) return null;
 	let reducedObject: splitTimeObject = {
