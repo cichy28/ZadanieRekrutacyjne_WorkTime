@@ -4,6 +4,7 @@
 	"description": "Worktime counter",
 	"main": "server.js",
 	"scripts": {
+		"start": "node ./src/app.ts",
 		"dev_start": "ts-node-dev --transpile-only --watch 'src/**' ./src/app.ts",
 		"test_dataParser": "npx jest dataParser.test",
 		"test_all": "npx jest"
