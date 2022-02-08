@@ -6,7 +6,7 @@
 			<%- include('./partials/nav.ejs') %>
 			<div class="main-style content">
 				<form action="/users/setUserData" method="post">
-					<label for="user">User name:</label>
+					<label for="userId">User name:</label>
 					<input type="text" id="userId" required name="userId" />
 					<label for="description">Task description:</label>
 					<input type="text" id="description" required name="description" /><br />
@@ -16,12 +16,17 @@
 						<option value="startUser"></option>
 						<option value="stopUser"></option>
 					</datalist>
-					<button id="submit">send</button><br />
+					<button id="submit">Send command</button><br />
 				</form>
 				<form action="/users/getUserData" method="get">
 					<label for="user">User name:</label>
 					<input type="text" id="userId" required name="userId" />
-					<button id="getDataButton">Get data</button><br />
+					<button id="getUserData">Get data</button><br />
+				</form>
+				<form action="/users/renderUserData" method="get">
+					<label for="user">User name:</label>
+					<input type="text" id="userId" required name="userId" />
+					<button id="renderUserData">Render data</button><br />
 				</form>
 			</div>
 			<%- include('./partials/foot.ejs') %>

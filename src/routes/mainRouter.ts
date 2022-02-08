@@ -5,11 +5,13 @@ import { TypedRequestBody, CommandRequest } from "../types/routes.types";
 const mainRouter = express.Router({ mergeParams: true });
 
 const getUserData = require("./users/getUserData");
+const renderUserData = require("./users/renderUserData");
 const loadTestingData = require("./users/loadTestingData");
 const setUserData = require("./users/setUserData");
 
 // Endppoints
 mainRouter.use("/users/getUserData", getUserData);
+mainRouter.use("/users/renderUserData", renderUserData);
 mainRouter.use("/users/loadTestingData", loadTestingData);
 mainRouter.use("/users/setUserData", setUserData);
 

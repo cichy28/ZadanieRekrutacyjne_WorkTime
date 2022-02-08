@@ -36,3 +36,7 @@ npm test
 -  tests made in JEST
 
 -  data in mongoDB Atlas user:test pass:test123
+
+## Notatki
+
+-  Axios - do wysyłania requestów, ale do testowania super test lepszy

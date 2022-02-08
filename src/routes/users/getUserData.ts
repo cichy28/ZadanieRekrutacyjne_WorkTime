@@ -7,12 +7,12 @@ module.exports = routes;
 
 /**
  * @swagger
- * /users/getUserData/{userId}:
+ * /users/getUserData:
  *   get:
  *     summary: Get data for chart.
  *     description: Take data about user activity..
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: userId
  *         required: true
  *         description: ID of user.
@@ -24,5 +24,5 @@ module.exports = routes;
  *         content:
  *           application/json:
  *             schema:
- *               "$ref": "#/components/schemas/Activity_time"
+ *               "$ref": "#/components/schemas/chartSchema"
  */

@@ -33,8 +33,7 @@ app.use("", mainRouter);
 app.set("view engine", "ejs");
 app.set("views", "./src/views");
 // MongoDB
-const uri = "mongodb+srv://JC:JC123@cluster0.of2pn.mongodb.net/Recrutation_Task1?retryWrites=true&w=majority";
-// Run python script
+const uri = "mongodb+srv://JC:JC123@cluster0.of2pn.mongodb.net/Task_TimeWork?retryWrites=true&w=majority";
 
 const startApp = async (): Promise<any> => {
 	try {

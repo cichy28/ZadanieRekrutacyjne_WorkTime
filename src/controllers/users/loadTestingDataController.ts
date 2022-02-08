@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { CommandRequest } from "../../types/routes.types";
-import commandModel from "../../models/users";
-import { isCommand, command } from "../../models/users";
+import commandModel from "../../models/commands";
+import { isCommand, command } from "../../models/commands";
 import { isArray } from "lodash";
 
 const loadTestingData = async (req: Request, res: Response): Promise<Response> => {

@@ -23,40 +23,41 @@
 	],
 	"components": {
 		"schemas": {
-			"Activity_time": {
-				"type": "object",
-				"properties": {
-					"date": {
-						"type": "string",
-						"description": "Date of user activity"
-					},
-					"time": {
-						"type": "number",
-						"description": "Time of activity per day in ms"
-					}
-				}
-			},
-			"commandSchema": {
+			"chartSchema": {
 				"type": "array",
 				"items": {
 					"type": "object",
 					"properties": {
-						"name": {
+						"x": {
 							"type": "string",
-							"description": "Name of the user"
+							"description": "Date in UTC standart"
 						},
-						"command": {
-							"type": "string",
-							"description": "Time of activity per day in ms"
-						},
-						"description": {
-							"type": "string",
-							"description": "Time of activity per day in ms"
-						},
-						"timestamp": {
-							"type": "date-time",
+						"y": {
+							"type": "number",
 							"description": "Time of activity per day in ms"
 						}
+					}
+				}
+			},
+			"commandSchema": {
+				"type": "object",
+				"properties": {
+					"userId": {
+						"type": "string",
+						"description": "Name of the user"
+					},
+					"command": {
+						"type": "string",
+						"description": "Time of activity per day in ms"
+					},
+					"description": {
+						"type": "string",
+						"description": "Time of activity per day in ms"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Time of activity per day in ms"
 					}
 				}
 			}

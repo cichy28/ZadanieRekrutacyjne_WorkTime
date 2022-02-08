@@ -5,7 +5,7 @@ const ajv = new Ajv();
 
 // 1. Create an interface representing a document in MongoDB.
 interface command {
-	name: string;
+	userId: string;
 	command: string;
 	description: string;
 	timestamp: string;
@@ -16,12 +16,12 @@ interface command {
 const schema: JSONSchemaType<command> = {
 	type: "object",
 	properties: {
-		name: { type: "string" },
+		userId: { type: "string" },
 		command: { type: "string" },
 		description: { type: "string" },
 		timestamp: { type: "string" },
 	},
-	required: ["name", "command", "timestamp"],
+	required: ["userId", "command"],
 	additionalProperties: false,
 };
 
@@ -33,7 +33,7 @@ const isCommand = ajv.compile(schema);
 
 const commandSchema = new mongoose.Schema<command>(
 	{
-		name: { type: String, required: true },
+		userId: { type: String, required: true },
 		command: { type: String, required: true },
 		description: { type: String, required: false },
 		timestamp: { type: String, required: true },
