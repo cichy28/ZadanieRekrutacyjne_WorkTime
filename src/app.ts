@@ -6,7 +6,7 @@ import morgan from "morgan";
 const { MongoClient } = require("mongodb");
 const mainRouter = require("./routes/mainRouter");
 const swaggerJSDoc = require("swagger-jsdoc");
-const swaggerDefinition = require("./swagger.json");
+const swaggerDefinition = require("../swagger.json");
 
 // Swager
 const options = {
