@@ -17,7 +17,10 @@ const options = {
 const swaggerSpec = swaggerJSDoc(options);
 
 // Express
-const port = 3000;
+let port = process.env.PORT;
+if (port == null || port == "") {
+	port = "3000";
+}
 const app = express();
 // Docs
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
