@@ -1,5 +1,5 @@
 import { raw, Request, Response } from "express";
-import DataParser from "../../classes/dataparser";
+import DataParser from "../../classes/dataParser";
 import commandModel from "../../models/commands";
 import { splitTimeObject } from "../../types/main.types";
 import { command } from "../../models/commands";
