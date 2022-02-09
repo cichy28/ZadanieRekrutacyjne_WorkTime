@@ -2,9 +2,9 @@
 	"name": "task",
 	"version": "1.0.0",
 	"description": "Worktime counter",
-	"main": "server.js",
+	"main": "dist/app.js",
 	"scripts": {
-		"start": "node dist/app.js",
+		"start": "node .",
 		"postinstall": "tsc",
 		"dev_start": "ts-node-dev --transpile-only --watch 'src/**' ./src/app.ts",
 		"deploy": "git add . && git commit -m Heroku && git push heroku master",
