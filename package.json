@@ -8,6 +8,7 @@
 		"postinstall": "tsc",
 		"compile": "tsc",
 		"dev_start": "ts-node-dev --transpile-only --watch 'src/**' ./src/app.ts",
+		"deploy": "git add . && git commit -m Heroku && git push heroku master",
 		"test_dataParser": "npx jest dataParser.test",
 		"test_all": "npx jest"
 	},
