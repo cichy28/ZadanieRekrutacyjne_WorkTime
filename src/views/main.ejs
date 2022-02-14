@@ -5,6 +5,7 @@
 		<div>
 			<%- include('./partials/nav.ejs') %>
 			<div class="main-style content">
+				<h3>Send commands</h3>
 				<form action="/users/setUserData" method="post">
 					<label for="userId">User name:</label>
 					<input type="text" id="userId" required name="userId" />
@@ -18,11 +19,13 @@
 					</datalist>
 					<button id="submit">Send command</button><br />
 				</form>
+				<h3>Get data</h3>
 				<form action="/users/getUserData" method="get">
 					<label for="user">User name:</label>
 					<input type="text" id="userId" required name="userId" />
 					<button id="getUserData">Get data</button><br />
 				</form>
+				<h3>Render data</h3>
 				<form action="/users/renderUserData" method="get">
 					<label for="user">User name:</label>
 					<input type="text" id="userId" required name="userId" />

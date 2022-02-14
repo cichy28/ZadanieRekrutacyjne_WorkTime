@@ -20,10 +20,8 @@ describe("splitArrayToArrayOfArrays", () => {
 });
 
 const start = new Date("2022-01-24T10:00:00.000+00:00");
-console.log("start to " + start);
 const stop = new Date("2022-01-26T12:00:00.000+00:00");
 
-console.log(dataParser.sameDayButMidnight(start));
 describe("splitTimeObjectToArrayOfObjects", () => {
 	it("Should not split the object ", () => {
 		expect(

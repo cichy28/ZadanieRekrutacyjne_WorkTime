@@ -76,6 +76,12 @@ h3 {
 	margin: 10px 0;
 	padding: 8px;
 }
+.main-style h3 {
+	display: block;
+	text-align: center;
+	margin-top: 24px;
+	text-decoration: underline;
+}
 .main-style label {
 	display: block;
 	margin-top: 24px;

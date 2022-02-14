@@ -1,4 +1,4 @@
-# Zadanie rekrutacyjne
+# Zadanie rekrutacyjne - wytyczne
 
 Napisz aplikację do śledzenia czasu pracy. Aplikacja powinna mieć następujące funkcjonalności:
 
@@ -13,30 +13,21 @@ Kryteria techniczne:
 -  Implementacja testów
 -  Opis endpointów w standardzie OpenAPI
 
-## Commands
+# Zadanie rekrutacyjne - opis
 
--  Run the app
+-  Zaimplementowano rozdział poelceń start/stop w zależnosći od id użytkownika
+-  Zaimplementowane blokady: (start juz wystartowanego zadania, stop nie rozpoczetego zadania)
+-  Pobierania sumarycznego czasu pracy per dzien - uwzględniono występowanie zadań trwających dłużej niż 1 dzień.
+-  Dodano prosty UI do realizacji zadań
 
-```
-npm dev_start
-```
+Kryteri techniczne:
 
--  Run tests
+-  Back -> Express + TypeScript + MongoDB + AJV
+-  Testy -> Jest
+-  Front -> ejs + plotly
+-  Doc -> Swagger
 
-```
-npm test
-```
+Uwagi:
 
-## Additional informations
-
--  start/stop timestamps stored as UTC
-
--  API doc made in Swagger http://localhost:3000/api-docs
-
--  tests made in JEST
-
+-  Czas w UTC
 -  data in mongoDB Atlas user:test pass:test123
-
-## Notatki
-
--  Axios - do wysyłania requestów, ale do testowania super test lepszy

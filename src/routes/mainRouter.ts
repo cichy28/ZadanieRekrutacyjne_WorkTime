@@ -16,7 +16,7 @@ mainRouter.use("/users/loadTestingData", loadTestingData);
 mainRouter.use("/users/setUserData", setUserData);
 
 mainRouter.get("/", (req, res) => {
-	res.render("main", { title: "Main paige", buttons: true });
+	res.render("main", { buttons: true });
 });
 
 mainRouter.use("", (req, res) => {
