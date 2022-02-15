@@ -13,7 +13,7 @@ interface command {
 
 // 2. Create a validation schema - AJV.
 
-const schema: JSONSchemaType<command> = {
+const validationSchema: JSONSchemaType<command> = {
 	type: "object",
 	properties: {
 		userId: { type: "string" },
@@ -27,23 +27,23 @@ const schema: JSONSchemaType<command> = {
 
 // 3. Create validation function - AJV
 
-const isCommand = ajv.compile(schema);
+const isCommand = ajv.compile(validationSchema);
 
 // 4. Create a Schema corresponding to the document interfac - MongoDB.
 
-const commandSchema = new mongoose.Schema<command>(
+const modelSchema = new mongoose.Schema<command>(
 	{
 		userId: { type: String, required: true },
 		command: { type: String, required: true },
 		description: { type: String, required: false },
-		timestamp: { type: String, required: true },
+		timestamp: { type: String, required: false },
 	},
-	{ timestamps: true }
+	{ timestamps: true, _id: false }
 );
 
 // 5. Create a Model - MongoDB
 
-const commandModel = mongoose.model<command>("Commands", commandSchema);
+const commandModel = mongoose.model<command>("Commands", modelSchema);
 
 export { command, isCommand };
 export default commandModel;

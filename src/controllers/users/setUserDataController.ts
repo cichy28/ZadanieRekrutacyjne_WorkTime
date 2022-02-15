@@ -3,70 +3,80 @@ import { CommandRequest } from "../../types/routes.types";
 import commandModel from "../../models/commands";
 import { isCommand, command } from "../../models/commands";
 
+interface responseObject {
+	valid: boolean;
+	message: string;
+}
+
 const setUserData = async (req: CommandRequest, res: Response): Promise<Response> => {
-	if (req.body.timestamp === undefined) {
-		req.body.timestamp = new Date().toUTCString();
-	}
 	if (!isCommand(req.body))
 		return res
 			.send(`Incorrect object - ${JSON.stringify(req.body)} details: ${JSON.stringify(isCommand.errors)}`)
 			.status(400);
-	if (req.body.command === "startUser") return startUser(req, res);
-	if (req.body.command === "stopUser") return stopUser(req, res);
-	return res.status(406).send("Incorrect command");
+	let response = {
+		valid: false,
+		message: "Invalid data",
+	};
+	if (req.body.command === "startUser") response = await startUser(req.body);
+	if (req.body.command === "stopUser") response = await stopUser(req.body);
+	return res
+		.status(406)
+		.status(response.valid ? 200 : 400)
+		.send(response.message);
 };
 
-const startUser = async (req: CommandRequest, res: Response): Promise<Response> => {
-	let responseObject = {
+const startUser = async (data: command): Promise<responseObject> => {
+	let response = {
+		valid: false,
 		message: "Invalid data",
-		dbResponse: {},
 	};
-	const newRecord = new commandModel({
-		userId: req.body.userId,
-		command: req.body.command,
-		description: req.body.description,
-		timestamp: Date(),
-	});
-	const lastRecord = await commandModel.findOne({ userId: req.body.userId }).sort({ createdAt: "desc" });
+	const newRecord = createDocument(data);
+	const lastRecord = await commandModel.findOne({ userId: data.userId }).sort({ createdAt: "desc" });
 
 	if (lastRecord === null || lastRecord.command === "stopUser") {
-		responseObject.dbResponse = await newRecord.save();
-		responseObject.message = `User ${req.body.userId} started`;
-		return res.status(200).send(responseObject);
+		await newRecord.save();
+		response.valid = true;
+		response.message = `User ${data.userId} started`;
+		return response;
 	}
 
 	if (lastRecord.command === "startUser") {
-		responseObject.message = `User ${req.body.userId} already started`;
-		return res.status(406).send(responseObject);
+		response.message = `User ${data.userId} already started`;
+		return response;
 	}
-
-	return res.status(406).send(responseObject);
+	return response;
 };
 
-const stopUser = async (req: CommandRequest, res: Response): Promise<Response> => {
+const stopUser = async (data: command): Promise<responseObject> => {
 	let responseObject = {
+		valid: false,
 		message: "Invalid data",
-		dbResponse: {},
 	};
-	const newRecord = new commandModel({
-		userId: req.body.userId,
-		command: "stopUser",
-		description: req.body.description,
-		timestamp: Date(),
-	});
-	const lastRecord = await commandModel.findOne({ userId: req.body.userId }).sort({ createdAt: "desc" });
+	const newRecord = createDocument(data);
+	const lastRecord = await commandModel.findOne({ userId: data.userId }).sort({ createdAt: "desc" });
 
 	if (lastRecord === null || lastRecord.command === "stopUser") {
-		responseObject.message = `User ${req.body.userId} is not started`;
-		return res.status(406).send(responseObject);
+		responseObject.message = `User ${data.userId} is not started`;
+		return responseObject;
 	}
 
 	if (lastRecord.command === "startUser") {
-		responseObject.dbResponse = await newRecord.save();
-		responseObject.message = `User ${req.body.userId} stopped`;
-		return res.status(200).send(responseObject);
+		await newRecord.save();
+		responseObject.valid = true;
+		responseObject.message = `User ${data.userId} stopped`;
+		return responseObject;
 	}
-
-	return res.status(406).send(responseObject);
+	return responseObject;
 };
+
+function createDocument(data: command) {
+	return new commandModel({
+		userId: data.userId,
+		command: data.command,
+		description: data.description,
+		timestamp: data.timestamp || new Date(),
+	});
+}
+
+export { startUser, stopUser };
 export default setUserData;

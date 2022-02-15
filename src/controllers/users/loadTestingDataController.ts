@@ -5,20 +5,32 @@ import { isCommand, command } from "../../models/commands";
 import { isArray } from "lodash";
 
 const loadTestingData = async (req: Request, res: Response): Promise<Response> => {
-	let responseObject = {
-		message: "Invalid data",
-		dbResponse: {},
-	};
+	const message = await loadData(req.body);
+	res.status(400).send(message.message);
+	if (message.valid) res.status(200);
+	return res;
+};
 
-	if (!isArray(req.body)) return res.send("Its not an array").status(400);
-	for (const element of req.body) {
-		if (!isCommand(element)) return res.send(`Incorrect object - ${JSON.stringify(element)}`).status(400);
+async function loadData(data: command[]) {
+	const result = { valid: false, message: "" };
+	if (!isArray(data)) {
+		result.message = "Its not an array";
+		return result;
 	}
-	for (const element of req.body) {
+	for (const element of data) {
+		if (!isCommand(element)) {
+			result.message = `Incorrect object - ${JSON.stringify(element)}`;
+			return result;
+		}
+	}
+	for (const element of data) {
 		let newRecord = new commandModel(element);
 		await newRecord.save();
 	}
-	return res.status(200).send("Data uploaded correctly");
-};
+	result.message = `Data uploaded correctly`;
+	result.valid = true;
+	return result;
+}
 
+export { loadData };
 export default loadTestingData;
