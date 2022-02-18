@@ -36,17 +36,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var getUserDataController_1 = require("./getUserDataController");
-var renderUserData = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var resData;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, getUserDataController_1.prepareChartData)(req, res)];
-            case 1:
-                resData = _a.sent();
-                res.render("chart", { title: "Main paige", chartData: resData, buttons: true });
-                return [2 /*return*/, res];
-        }
+exports.renderUserData = void 0;
+var getUserDataController_1 = require("@src/controllers/users/getUserDataController");
+// A moze to jakos da sie zrobić w 1 pliku ??? - TO DO
+function renderUserData(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var userCommands, chartData;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (req.query.userId === undefined)
+                        return [2 /*return*/, res.status(400).send("userId not found")];
+                    return [4 /*yield*/, (0, getUserDataController_1.getUserCommnads)(String(req.query.userId))];
+                case 1:
+                    userCommands = _a.sent();
+                    return [4 /*yield*/, (0, getUserDataController_1.prepareChartData)(userCommands)];
+                case 2:
+                    chartData = _a.sent();
+                    if (chartData === null)
+                        res.send("No data available").status(400);
+                    res.render("chart", { title: "Main paige", chartData: chartData, buttons: true });
+                    return [2 /*return*/, res];
+            }
+        });
     });
-}); };
-exports.default = renderUserData;
+}
+exports.renderUserData = renderUserData;

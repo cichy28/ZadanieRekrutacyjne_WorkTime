@@ -1,8 +1,7 @@
+"use strict";
 // import { prepareChartData } from "../../../controllers/users/getUserDataController";
 // import request from "supertest";
-
 // const request = "test";
-
 // describe("Start the user", () => {
 // 	it("Should return a 200 status code and should add new record", async () => {
 // 		const response = await request(app)

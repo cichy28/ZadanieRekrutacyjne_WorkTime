@@ -1,10 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var dataparser_1 = __importDefault(require("../../classes/dataparser"));
-var dataParser = new dataparser_1.default();
+var dataParser_1 = require("../../classes/dataParser");
+var dataParser = new dataParser_1.DataParser();
 describe("splitArrayToArrayOfArrays", function () {
     it("Should nest the array", function () {
         expect(dataParser.splitArrayToArrayOfArrays([{ a: 1 }, { a: 2 }], 2)).toEqual([[{ a: 1 }, { a: 2 }]]);
@@ -22,9 +19,7 @@ describe("splitArrayToArrayOfArrays", function () {
     });
 });
 var start = new Date("2022-01-24T10:00:00.000+00:00");
-console.log("start to " + start);
 var stop = new Date("2022-01-26T12:00:00.000+00:00");
-console.log(dataParser.sameDayButMidnight(start));
 describe("splitTimeObjectToArrayOfObjects", function () {
     it("Should not split the object ", function () {
         expect(dataParser.splitTimeObjectToArrayOfObjects({

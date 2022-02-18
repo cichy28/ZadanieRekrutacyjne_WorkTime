@@ -1,12 +1,15 @@
+import "module-alias/register";
 import express from "express";
 import mongoose from "mongoose";
 import swaggerUi from "swagger-ui-express";
 import morgan from "morgan";
+import { mainRouter } from "@src/routes/mainRouter";
 
 const { MongoClient } = require("mongodb");
-const mainRouter = require("./routes/mainRouter");
+
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerDefinition = require("../swagger.json");
+const expressValidator = require("express-validator");
 
 // Swager
 const options = {

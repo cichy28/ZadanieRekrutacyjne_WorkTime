@@ -35,44 +35,65 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var commands_1 = __importDefault(require("../../models/commands"));
-var commands_2 = require("../../models/commands");
+exports.loadData = exports.loadTestingData = void 0;
+var commands_1 = require("@src/models/commands");
+var commands_2 = require("@src/models/commands");
 var lodash_1 = require("lodash");
-var loadTestingData = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var responseObject, _i, _a, element, _b, _c, element, newRecord;
-    return __generator(this, function (_d) {
-        switch (_d.label) {
-            case 0:
-                responseObject = {
-                    message: "Invalid data",
-                    dbResponse: {},
-                };
-                if (!(0, lodash_1.isArray)(req.body))
-                    return [2 /*return*/, res.send("Its not an array").status(400)];
-                for (_i = 0, _a = req.body; _i < _a.length; _i++) {
-                    element = _a[_i];
-                    if (!(0, commands_2.isCommand)(element))
-                        return [2 /*return*/, res.send("Incorrect object - ".concat(JSON.stringify(element))).status(400)];
-                }
-                _b = 0, _c = req.body;
-                _d.label = 1;
-            case 1:
-                if (!(_b < _c.length)) return [3 /*break*/, 4];
-                element = _c[_b];
-                newRecord = new commands_1.default(element);
-                return [4 /*yield*/, newRecord.save()];
-            case 2:
-                _d.sent();
-                _d.label = 3;
-            case 3:
-                _b++;
-                return [3 /*break*/, 1];
-            case 4: return [2 /*return*/, res.status(200).send("Data uploaded correctly")];
-        }
+function loadTestingData(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var message;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, loadData(req.body)];
+                case 1:
+                    message = _a.sent();
+                    res.status(400).send(message.message);
+                    if (message.valid)
+                        res.status(200);
+                    return [2 /*return*/, res];
+            }
+        });
     });
-}); };
-exports.default = loadTestingData;
+}
+exports.loadTestingData = loadTestingData;
+function loadData(data) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result, _i, data_1, element, _a, data_2, element, newRecord;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    result = { valid: false, message: "" };
+                    if (!(0, lodash_1.isArray)(data)) {
+                        result.message = "Its not an array";
+                        return [2 /*return*/, result];
+                    }
+                    for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
+                        element = data_1[_i];
+                        if (!(0, commands_2.isCommand)(element)) {
+                            result.message = "Incorrect object - ".concat(JSON.stringify(element));
+                            return [2 /*return*/, result];
+                        }
+                    }
+                    _a = 0, data_2 = data;
+                    _b.label = 1;
+                case 1:
+                    if (!(_a < data_2.length)) return [3 /*break*/, 4];
+                    element = data_2[_a];
+                    newRecord = new commands_1.commandModel(element);
+                    return [4 /*yield*/, newRecord.save()];
+                case 2:
+                    _b.sent();
+                    _b.label = 3;
+                case 3:
+                    _a++;
+                    return [3 /*break*/, 1];
+                case 4:
+                    result.message = "Data uploaded correctly";
+                    result.valid = true;
+                    return [2 /*return*/, result];
+            }
+        });
+    });
+}
+exports.loadData = loadData;

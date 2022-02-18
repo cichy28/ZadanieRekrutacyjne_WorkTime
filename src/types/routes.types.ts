@@ -1,4 +1,4 @@
-import { command } from "../models/commands";
+import { command } from "@src/models/commands";
 
 export interface TypedRequestBody<T> extends Express.Request {
 	params: T;

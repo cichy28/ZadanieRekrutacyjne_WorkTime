@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../../app";
-import commandModel from "../../models/commands";
+import { commandModel } from "../../models/commands";
 
 const userName = "test";
 const taskDesription1 = "Test description";

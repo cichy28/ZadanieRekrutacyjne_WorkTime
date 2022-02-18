@@ -1,4 +1,4 @@
-import DataParser from "../../classes/dataParser";
+import {DataParser} from "../../classes/dataParser";
 
 const dataParser = new DataParser();
 

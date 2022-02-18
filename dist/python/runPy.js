@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var runPy = function (processName, pathToScript) {
     return new Promise(function (success, nosuccess) {
         var spawn = require("child_process").spawn;
@@ -12,4 +11,4 @@ var runPy = function (processName, pathToScript) {
         });
     });
 };
-exports.default = runPy;
+runPy;

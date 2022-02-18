@@ -35,89 +35,99 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.prepareChartData = void 0;
-var dataparser_1 = __importDefault(require("../../classes/dataparser"));
-var commands_1 = __importDefault(require("../../models/commands"));
-var dataParser = new dataparser_1.default();
-function prepareChartData(req, res) {
+exports.getUserData = exports.prepareChartData = exports.getUserCommnads = void 0;
+var dataParser_1 = require("@classes/dataParser");
+var commands_1 = require("@models/commands");
+var dataParser = new dataParser_1.DataParser();
+function getUserCommnads(userId) {
     return __awaiter(this, void 0, void 0, function () {
-        var rawData, data, reducedObject, reducedData, _i, data_1, element, splitedData, _a, reducedData_1, timeElement, pushObject, test, chartData, i, summOfTimeInMs, _b, test_1, element;
+        var rawData;
+        return __generator(this, function (_a) {
+            rawData = commands_1.commandModel
+                .find({ $and: [{ userId: userId }], $or: [{ command: "startUser" }, { command: "stopUser" }] }, { _id: 0, userId: 1, command: 1, description: 1, timestamp: 1 })
+                .lean()
+                .sort({ timestamp: "desc" })
+                .catch(function (error) {
+                throw error;
+            });
+            return [2 /*return*/, rawData];
+        });
+    });
+}
+exports.getUserCommnads = getUserCommnads;
+function prepareChartData(rawData) {
+    return __awaiter(this, void 0, void 0, function () {
+        var data, reducedObject, reducedData, _i, data_1, element, splitedData, _a, reducedData_1, timeElement, pushObject, test, chartData, i, summOfTimeInMs, _b, test_1, element;
         return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0: return [4 /*yield*/, commands_1.default
-                        .find({ $and: [{ userId: req.query.userId }], $or: [{ command: "startUser" }, { command: "stopUser" }] }, "name command description timestamp")
-                        .lean()
-                        .sort({ timestamp: "desc" })
-                        .catch(function (error) {
-                        console.log(error);
-                    })];
-                case 1:
-                    rawData = _c.sent();
-                    if (rawData === undefined || rawData.length <= 0)
-                        return [2 /*return*/, null];
-                    data = dataParser.splitArrayToArrayOfArrays(rawData, 2);
-                    if (data === null)
-                        return [2 /*return*/, null];
-                    reducedObject = {
-                        beginDate: new Date(),
-                        endDate: new Date(),
-                        object: {},
-                    };
-                    reducedData = [];
-                    for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
-                        element = data_1[_i];
-                        reducedObject.beginDate = new Date(element[1].timestamp);
-                        reducedObject.endDate = new Date(element[0].timestamp);
-                        reducedObject.object = element[0];
-                        reducedData.push(Object.assign({}, reducedObject));
-                    }
-                    splitedData = [];
-                    for (_a = 0, reducedData_1 = reducedData; _a < reducedData_1.length; _a++) {
-                        timeElement = reducedData_1[_a];
-                        pushObject = dataParser.splitTimeObjectToArrayOfObjects(timeElement);
-                        if (pushObject !== null)
-                            splitedData.push(pushObject);
-                    }
-                    test = splitedData.reverse().flat();
-                    chartData = [{ x: [], y: [], type: "bar" }];
-                    chartData[0].x = Object.values(test)
-                        .map(function (element) { return element.beginDate.toDateString(); })
-                        .filter(function (value, index, self) { return self.indexOf(value) == index; });
-                    i = 0;
-                    summOfTimeInMs = 0;
-                    for (_b = 0, test_1 = test; _b < test_1.length; _b++) {
-                        element = test_1[_b];
-                        if (chartData[0].x[i] === element.beginDate.toDateString()) {
-                            summOfTimeInMs += element.endDate.getUTCSeconds() - element.beginDate.getUTCSeconds();
-                        }
-                        else {
-                            chartData[0].y.push(summOfTimeInMs);
-                            summOfTimeInMs = 0;
-                            i++;
-                        }
-                    }
-                    chartData[0].y.push(summOfTimeInMs);
-                    return [2 /*return*/, chartData];
+            if (rawData === undefined || rawData.length <= 0)
+                return [2 /*return*/, null];
+            data = dataParser.splitArrayToArrayOfArrays(rawData, 2);
+            if (data === null)
+                return [2 /*return*/, null];
+            reducedObject = {
+                beginDate: new Date(),
+                endDate: new Date(),
+                object: {},
+            };
+            reducedData = [];
+            for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
+                element = data_1[_i];
+                reducedObject.beginDate = new Date(element[1].timestamp);
+                reducedObject.endDate = new Date(element[0].timestamp);
+                reducedObject.object = element[0];
+                reducedData.push(Object.assign({}, reducedObject));
             }
+            splitedData = [];
+            for (_a = 0, reducedData_1 = reducedData; _a < reducedData_1.length; _a++) {
+                timeElement = reducedData_1[_a];
+                pushObject = dataParser.splitTimeObjectToArrayOfObjects(timeElement);
+                if (pushObject !== null)
+                    splitedData.push(pushObject);
+            }
+            test = splitedData.reverse().flat();
+            chartData = [{ x: [], y: [], type: "bar" }];
+            chartData[0].x = Object.values(test)
+                .map(function (element) { return element.beginDate.toDateString(); })
+                .filter(function (value, index, self) { return self.indexOf(value) == index; });
+            i = 0;
+            summOfTimeInMs = 0;
+            for (_b = 0, test_1 = test; _b < test_1.length; _b++) {
+                element = test_1[_b];
+                if (chartData[0].x[i] === element.beginDate.toDateString()) {
+                    summOfTimeInMs += element.endDate.getUTCSeconds() - element.beginDate.getUTCSeconds();
+                }
+                else {
+                    chartData[0].y.push(summOfTimeInMs);
+                    summOfTimeInMs = 0;
+                    i++;
+                }
+            }
+            chartData[0].y.push(summOfTimeInMs);
+            return [2 /*return*/, chartData];
         });
     });
 }
 exports.prepareChartData = prepareChartData;
-var getUserData = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var chartData;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, prepareChartData(req, res)];
-            case 1:
-                chartData = _a.sent();
-                if (chartData === null)
-                    res.send("No data available").status(200);
-                return [2 /*return*/, res.status(200).send(chartData)];
-        }
+var getUserData = function (req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var userCommands, chartData;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (req.query.userId === undefined)
+                        return [2 /*return*/, res.status(400).send("userId not found")];
+                    return [4 /*yield*/, getUserCommnads(String(req.query.userId))];
+                case 1:
+                    userCommands = _a.sent();
+                    return [4 /*yield*/, prepareChartData(userCommands)];
+                case 2:
+                    chartData = _a.sent();
+                    if (chartData === null)
+                        res.send("No data available").status(400);
+                    return [2 /*return*/, res.status(200).send(chartData)];
+            }
+        });
     });
-}); };
-exports.default = getUserData;
+};
+exports.getUserData = getUserData;

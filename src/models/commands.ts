@@ -4,7 +4,7 @@ import Ajv, { JSONSchemaType } from "ajv";
 const ajv = new Ajv();
 
 // 1. Create an interface representing a document in MongoDB.
-interface command {
+export interface command {
 	userId: string;
 	command: string;
 	description: string;
@@ -27,7 +27,7 @@ const validationSchema: JSONSchemaType<command> = {
 
 // 3. Create validation function - AJV
 
-const isCommand = ajv.compile(validationSchema);
+export const isCommand = ajv.compile(validationSchema);
 
 // 4. Create a Schema corresponding to the document interfac - MongoDB.
 
@@ -43,7 +43,4 @@ const modelSchema = new mongoose.Schema<command>(
 
 // 5. Create a Model - MongoDB
 
-const commandModel = mongoose.model<command>("Commands", modelSchema);
-
-export { command, isCommand };
-export default commandModel;
+export const commandModel = mongoose.model<command>("Commands", modelSchema);

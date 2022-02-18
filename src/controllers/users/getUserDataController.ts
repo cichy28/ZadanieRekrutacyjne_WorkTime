@@ -1,15 +1,15 @@
 import { raw, Request, Response } from "express";
-import DataParser from "../../classes/dataParser";
-import commandModel from "../../models/commands";
-import { splitTimeObject } from "../../types/main.types";
-import { isCommand, command } from "../../models/commands";
+import { DataParser } from "@classes/dataParser";
+import { commandModel } from "@models/commands";
+import { splitTimeObject } from "@src/types/main.types";
+import { command } from "@src/models/commands";
 import * as _ from "lodash";
 
 const dataParser = new DataParser();
 
 type chartType = { x: string[]; y: number[]; type: string }[] | null;
 
-async function getUserCommnads(userId: string) {
+export async function getUserCommnads(userId: string) {
 	let rawData = commandModel
 		.find(
 			{ $and: [{ userId: userId }], $or: [{ command: "startUser" }, { command: "stopUser" }] },
@@ -23,7 +23,7 @@ async function getUserCommnads(userId: string) {
 	return rawData;
 }
 
-async function prepareChartData(rawData: command[]) {
+export async function prepareChartData(rawData: command[]) {
 	if (rawData === undefined || rawData.length <= 0) return null;
 	const data = dataParser.splitArrayToArrayOfArrays(rawData, 2);
 	if (data === null) return null;
@@ -64,12 +64,10 @@ async function prepareChartData(rawData: command[]) {
 	return chartData;
 }
 
-const getUserData = async (req: Request, res: Response): Promise<Response> => {
+export const getUserData = async function (req: Request, res: Response): Promise<Response> {
 	if (req.query.userId === undefined) return res.status(400).send("userId not found");
 	const userCommands = await getUserCommnads(String(req.query.userId));
 	const chartData = await prepareChartData(userCommands);
 	if (chartData === null) res.send("No data available").status(400);
 	return res.status(200).send(chartData);
 };
-export { prepareChartData, getUserCommnads };
-export default getUserData;

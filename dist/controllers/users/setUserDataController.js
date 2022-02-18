@@ -35,93 +35,106 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var commands_1 = __importDefault(require("../../models/commands"));
-var commands_2 = require("../../models/commands");
-var setUserData = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        if (req.body.timestamp === undefined) {
-            req.body.timestamp = new Date().toUTCString();
-        }
-        if (!(0, commands_2.isCommand)(req.body))
-            return [2 /*return*/, res
-                    .send("Incorrect object - ".concat(JSON.stringify(req.body), " details: ").concat(JSON.stringify(commands_2.isCommand.errors)))
-                    .status(400)];
-        if (req.body.command === "startUser")
-            return [2 /*return*/, startUser(req, res)];
-        if (req.body.command === "stopUser")
-            return [2 /*return*/, stopUser(req, res)];
-        return [2 /*return*/, res.status(406).send("Incorrect command")];
+exports.setUserData = void 0;
+var commands_1 = require("@src/models/commands");
+var commands_2 = require("@src/models/commands");
+function setUserData(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!(0, commands_2.isCommand)(req.body))
+                        return [2 /*return*/, res
+                                .send("Incorrect object - ".concat(JSON.stringify(req.body), " details: ").concat(JSON.stringify(commands_2.isCommand.errors)))
+                                .status(400)];
+                    response = {
+                        valid: false,
+                        message: "Invalid data",
+                    };
+                    if (!(req.body.command === "startUser")) return [3 /*break*/, 2];
+                    return [4 /*yield*/, startUser(req.body)];
+                case 1:
+                    response = _a.sent();
+                    _a.label = 2;
+                case 2:
+                    if (!(req.body.command === "stopUser")) return [3 /*break*/, 4];
+                    return [4 /*yield*/, stopUser(req.body)];
+                case 3:
+                    response = _a.sent();
+                    _a.label = 4;
+                case 4: return [2 /*return*/, res
+                        .status(406)
+                        .status(response.valid ? 200 : 400)
+                        .send(response.message)];
+            }
+        });
     });
-}); };
-var startUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var responseObject, newRecord, lastRecord, _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+}
+exports.setUserData = setUserData;
+var startUser = function (data) { return __awaiter(void 0, void 0, void 0, function () {
+    var response, newRecord, lastRecord;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                responseObject = {
+                response = {
+                    valid: false,
                     message: "Invalid data",
-                    dbResponse: {},
                 };
-                newRecord = new commands_1.default({
-                    userId: req.body.userId,
-                    command: req.body.command,
-                    description: req.body.description,
-                    timestamp: Date(),
-                });
-                return [4 /*yield*/, commands_1.default.findOne({ userId: req.body.userId }).sort({ createdAt: "desc" })];
+                newRecord = createDocument(data);
+                return [4 /*yield*/, commands_1.commandModel.findOne({ userId: data.userId }).sort({ createdAt: "desc" })];
             case 1:
-                lastRecord = _b.sent();
+                lastRecord = _a.sent();
                 if (!(lastRecord === null || lastRecord.command === "stopUser")) return [3 /*break*/, 3];
-                _a = responseObject;
                 return [4 /*yield*/, newRecord.save()];
             case 2:
-                _a.dbResponse = _b.sent();
-                responseObject.message = "User ".concat(req.body.userId, " started");
-                return [2 /*return*/, res.status(200).send(responseObject)];
+                _a.sent();
+                response.valid = true;
+                response.message = "User ".concat(data.userId, " started");
+                return [2 /*return*/, response];
             case 3:
                 if (lastRecord.command === "startUser") {
-                    responseObject.message = "User ".concat(req.body.userId, " already started");
-                    return [2 /*return*/, res.status(406).send(responseObject)];
+                    response.message = "User ".concat(data.userId, " already started");
+                    return [2 /*return*/, response];
                 }
-                return [2 /*return*/, res.status(406).send(responseObject)];
+                return [2 /*return*/, response];
         }
     });
 }); };
-var stopUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var responseObject, newRecord, lastRecord, _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+var stopUser = function (data) { return __awaiter(void 0, void 0, void 0, function () {
+    var responseObject, newRecord, lastRecord;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
                 responseObject = {
+                    valid: false,
                     message: "Invalid data",
-                    dbResponse: {},
                 };
-                newRecord = new commands_1.default({
-                    userId: req.body.userId,
-                    command: "stopUser",
-                    description: req.body.description,
-                    timestamp: Date(),
-                });
-                return [4 /*yield*/, commands_1.default.findOne({ userId: req.body.userId }).sort({ createdAt: "desc" })];
+                newRecord = createDocument(data);
+                return [4 /*yield*/, commands_1.commandModel.findOne({ userId: data.userId }).sort({ createdAt: "desc" })];
             case 1:
-                lastRecord = _b.sent();
+                lastRecord = _a.sent();
                 if (lastRecord === null || lastRecord.command === "stopUser") {
-                    responseObject.message = "User ".concat(req.body.userId, " is not started");
-                    return [2 /*return*/, res.status(406).send(responseObject)];
+                    responseObject.message = "User ".concat(data.userId, " is not started");
+                    return [2 /*return*/, responseObject];
                 }
                 if (!(lastRecord.command === "startUser")) return [3 /*break*/, 3];
-                _a = responseObject;
                 return [4 /*yield*/, newRecord.save()];
             case 2:
-                _a.dbResponse = _b.sent();
-                responseObject.message = "User ".concat(req.body.userId, " stopped");
-                return [2 /*return*/, res.status(200).send(responseObject)];
-            case 3: return [2 /*return*/, res.status(406).send(responseObject)];
+                _a.sent();
+                responseObject.valid = true;
+                responseObject.message = "User ".concat(data.userId, " stopped");
+                return [2 /*return*/, responseObject];
+            case 3: return [2 /*return*/, responseObject];
         }
     });
 }); };
-exports.default = setUserData;
+function createDocument(data) {
+    return new commands_1.commandModel({
+        userId: data.userId,
+        command: data.command,
+        description: data.description,
+        timestamp: data.timestamp || new Date(),
+    });
+}

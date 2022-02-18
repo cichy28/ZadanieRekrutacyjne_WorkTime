@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
-import { CommandRequest } from "../../types/routes.types";
-import commandModel from "../../models/commands";
-import { isCommand, command } from "../../models/commands";
+import { commandModel } from "@src/models/commands";
+import { CommandRequest } from "@src/types/routes.types";
+import { command, isCommand } from "@src/models/commands";
 
 interface responseObject {
 	valid: boolean;
 	message: string;
 }
 
-const setUserData = async (req: CommandRequest, res: Response): Promise<Response> => {
+export async function setUserData(req: CommandRequest, res: Response): Promise<Response> {
 	if (!isCommand(req.body))
 		return res
 			.send(`Incorrect object - ${JSON.stringify(req.body)} details: ${JSON.stringify(isCommand.errors)}`)
@@ -23,7 +23,7 @@ const setUserData = async (req: CommandRequest, res: Response): Promise<Response
 		.status(406)
 		.status(response.valid ? 200 : 400)
 		.send(response.message);
-};
+}
 
 const startUser = async (data: command): Promise<responseObject> => {
 	let response = {
@@ -77,6 +77,3 @@ function createDocument(data: command) {
 		timestamp: data.timestamp || new Date(),
 	});
 }
-
-export { startUser, stopUser };
-export default setUserData;

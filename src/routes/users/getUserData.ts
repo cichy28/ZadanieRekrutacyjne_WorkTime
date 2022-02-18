@@ -1,9 +1,8 @@
 import express from "express";
-import getUserData from "../../controllers/users/getUserDataController";
+import { getUserData } from "@src/controllers/users/getUserDataController";
 
-const routes = express.Router({ mergeParams: true });
+export const routes = express.Router({ mergeParams: true });
 routes.get("/", getUserData);
-module.exports = routes;
 
 /**
  * @swagger

@@ -19,6 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DataParser = void 0;
 var _ = __importStar(require("lodash"));
 var DataParser = /** @class */ (function () {
     function DataParser() {
@@ -95,4 +96,4 @@ var DataParser = /** @class */ (function () {
     };
     return DataParser;
 }());
-exports.default = DataParser;
+exports.DataParser = DataParser;

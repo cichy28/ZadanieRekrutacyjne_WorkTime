@@ -1,9 +1,8 @@
 import express from "express";
-import setUserData from "../../controllers/users/setUserDataController";
+import { setUserData } from "@src/controllers/users/setUserDataController";
 
-const routes = express.Router({ mergeParams: true });
+export const routes = express.Router({ mergeParams: true });
 routes.post("/", setUserData);
-module.exports = routes;
 
 /**
  * @swagger

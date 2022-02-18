@@ -4,7 +4,7 @@
 	"description": "Worktime counter",
 	"main": "dist/app.js",
 	"scripts": {
-		"dev_start": "ts-node-dev --transpile-only --watch 'src/**' ./src/app.ts",
+		"dev_start": "ts-node-dev --watch 'src/**' ./src/app.ts",
 		"commit+add": "git add -A && git commit && git push",
 		"deploy": "git add . && git commit -m Heroku && git push heroku master",
 		"test_dataParser": "npx jest dataParser.test",
@@ -12,13 +12,21 @@
 		"start": "node .",
 		"postinstall": "tsc"
 	},
+	"_moduleAliases": {
+		"@src": "dist",
+		"@models": "dist/models",
+		"@classes": "dist/classes",
+		"@controllers": "dist/controllers/users"
+	},
 	"author": "Jan Cichosz",
 	"license": "ISC",
 	"dependencies": {
 		"ajv": "^8.10.0",
 		"ejs": "^3.1.6",
 		"express": "^4.17.2",
+		"express-validator": "^6.14.0",
 		"lodash": "^4.17.21",
+		"module-alias": "^2.2.2",
 		"mongodb": "^4.3.0p",
 		"mongoose": "^6.1.8",
 		"morgan": "^1.10.0",

@@ -1,7 +1,6 @@
 import * as _ from "lodash";
-import { splitTimeObject } from "../types/main.types";
-
-class DataParser {
+import { splitTimeObject } from "@src/types/main.types";
+export class DataParser {
 	constructor() {}
 
 	public splitArrayToArrayOfArrays<T>(array: Array<T>, numberOfElementsInArray: number): Array<Array<T>> | null {
@@ -78,5 +77,3 @@ class DataParser {
 		return (this.sameDayButMidnight(date).getTime() - date.getTime()) / 1000 / 60;
 	}
 }
-
-export default DataParser;

@@ -39,14 +39,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require("module-alias/register");
 var express_1 = __importDefault(require("express"));
 var mongoose_1 = __importDefault(require("mongoose"));
 var swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 var morgan_1 = __importDefault(require("morgan"));
+var mainRouter_1 = require("@src/routes/mainRouter");
 var MongoClient = require("mongodb").MongoClient;
-var mainRouter = require("./routes/mainRouter");
 var swaggerJSDoc = require("swagger-jsdoc");
 var swaggerDefinition = require("../swagger.json");
+var expressValidator = require("express-validator");
 // Swager
 var options = {
     swaggerDefinition: swaggerDefinition,
@@ -69,7 +71,8 @@ app.use(express_1.default.static("public"));
 // Encoding
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
-app.use("", mainRouter);
+app.use(expressValidator());
+app.use("", mainRouter_1.mainRouter);
 // View engine
 app.set("view engine", "ejs");
 app.set("views", "./src/views");

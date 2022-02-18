@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.routes = void 0;
 var express_1 = __importDefault(require("express"));
-var loadTestingDataController_1 = __importDefault(require("../../controllers/users/loadTestingDataController"));
-var routes = express_1.default.Router({ mergeParams: true });
-routes.post("/", loadTestingDataController_1.default);
-module.exports = routes;
+var loadTestingDataController_1 = require("@src/controllers/users/loadTestingDataController");
+exports.routes = express_1.default.Router({ mergeParams: true });
+exports.routes.post("/", loadTestingDataController_1.loadTestingData);
 /**
  * @swagger
  * /users/loadTestingData:

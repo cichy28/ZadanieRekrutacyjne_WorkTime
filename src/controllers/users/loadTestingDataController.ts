@@ -1,17 +1,18 @@
-import { Request, Response } from "express";
-import { CommandRequest } from "../../types/routes.types";
-import commandModel from "../../models/commands";
-import { isCommand, command } from "../../models/commands";
+import { raw, Request, Response } from "express";
+import { DataParser } from "@src/classes/dataParser";
+import { commandModel } from "@src/models/commands";
+import { splitTimeObject } from "@src/types/main.types";
+import { command, isCommand } from "@src/models/commands";
 import { isArray } from "lodash";
 
-const loadTestingData = async (req: Request, res: Response): Promise<Response> => {
+export async function loadTestingData(req: Request, res: Response): Promise<Response> {
 	const message = await loadData(req.body);
 	res.status(400).send(message.message);
 	if (message.valid) res.status(200);
 	return res;
-};
+}
 
-async function loadData(data: command[]) {
+export async function loadData(data: command[]) {
 	const result = { valid: false, message: "" };
 	if (!isArray(data)) {
 		result.message = "Its not an array";
@@ -31,6 +32,3 @@ async function loadData(data: command[]) {
 	result.valid = true;
 	return result;
 }
-
-export { loadData };
-export default loadTestingData;

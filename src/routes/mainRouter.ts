@@ -1,13 +1,11 @@
-import express, { Router, Application, Request, Response } from "express";
-
-import { TypedRequestBody, CommandRequest } from "../types/routes.types";
+import express from "express";
 
 const mainRouter = express.Router({ mergeParams: true });
 
-const getUserData = require("./users/getUserData");
-const renderUserData = require("./users/renderUserData");
-const loadTestingData = require("./users/loadTestingData");
-const setUserData = require("./users/setUserData");
+import { getUserData } from "@controllers/getUserDataController";
+import { renderUserData } from "@controllers/renderUserDataController";
+import { loadTestingData } from "@controllers/loadTestingDataController";
+import { setUserData } from "@controllers/setUserDataController";
 
 // Endppoints
 mainRouter.use("/users/getUserData", getUserData);
@@ -24,4 +22,4 @@ mainRouter.use("", (req, res) => {
 	res.sendStatus(404);
 });
 
-module.exports = mainRouter;
+export { mainRouter };

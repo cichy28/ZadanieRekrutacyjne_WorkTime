@@ -1,9 +1,8 @@
 import express from "express";
-import loadTestingData from "../../controllers/users/loadTestingDataController";
+import { loadTestingData } from "@src/controllers/users/loadTestingDataController";
 
-const routes = express.Router({ mergeParams: true });
+export const routes = express.Router({ mergeParams: true });
 routes.post("/", loadTestingData);
-module.exports = routes;
 
 /**
  * @swagger
