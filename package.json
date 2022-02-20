@@ -8,7 +8,7 @@
 		"commit+add": "git add -A && git commit && git push",
 		"deploy": "git add . && git commit -m Heroku && git push heroku master",
 		"test_dataParser": "npx jest dataParser.test",
-		"test_all": "npx jest",
+		"test_all": "jest src",
 		"start": "node .",
 		"postinstall": "tsc"
 	},

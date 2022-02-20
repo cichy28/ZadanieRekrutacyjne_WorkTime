@@ -71,7 +71,6 @@ app.use(express_1.default.static("public"));
 // Encoding
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
-app.use(expressValidator());
 app.use("", mainRouter_1.mainRouter);
 // View engine
 app.set("view engine", "ejs");

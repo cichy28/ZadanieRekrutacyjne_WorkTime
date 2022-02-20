@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var dataParser_1 = require("../../classes/dataParser");
+var dataParser_1 = require("@src/classes/dataParser");
 var dataParser = new dataParser_1.DataParser();
 describe("splitArrayToArrayOfArrays", function () {
     it("Should nest the array", function () {
