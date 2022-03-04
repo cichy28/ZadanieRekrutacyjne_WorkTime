@@ -4,19 +4,14 @@
 	"description": "Worktime counter",
 	"main": "dist/app.js",
 	"scripts": {
-		"dev_start": "ts-node-dev --watch 'src/**' ./src/app.ts",
+		"dsasd": "ts-node-dev --transpile-only -r tsconfig-paths/register ./src/app.ts",
+		"dev_start": "ts-node-dev --respawn --exit-child --transpile-only --watch src ./src/app.ts",
 		"commit+add": "git add -A && git commit && git push",
 		"deploy": "git add . && git commit -m Heroku && git push heroku master",
 		"test_dataParser": "npx jest dataParser.test",
 		"test_all": "jest src",
 		"start": "node .",
 		"postinstall": "tsc"
-	},
-	"_moduleAliases": {
-		"@src": "dist",
-		"@models": "dist/models",
-		"@classes": "dist/classes",
-		"@controllers": "dist/controllers/users"
 	},
 	"author": "Jan Cichosz",
 	"license": "ISC",
@@ -48,7 +43,9 @@
 		"jest": "^27.4.5",
 		"supertest": "^6.1.6",
 		"ts-jest": "^27.1.2",
-		"ts-node-dev": "^1.1.8"
+		"ts-node": "^10.6.0",
+		"ts-node-dev": "^1.1.8",
+		"tsconfig-paths": "^3.13.0"
 	},
 	"engines": {
 		"node": "14.18.1",

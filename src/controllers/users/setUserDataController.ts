@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { commandModel } from "@src/models/commands";
 import { CommandRequest } from "@src/types/routes.types";
-import { command, isCommand } from "@src/models/commands";
+import { ICommand, ICommandBaseDocument, commandModel, isCommand } from "@models/commands";
 
 interface responseObject {
 	valid: boolean;
@@ -25,7 +24,7 @@ export async function setUserData(req: CommandRequest, res: Response): Promise<R
 		.send(response.message);
 }
 
-const startUser = async (data: command): Promise<responseObject> => {
+const startUser = async (data: ICommand): Promise<responseObject> => {
 	let response = {
 		valid: false,
 		message: "Invalid data",
@@ -47,7 +46,7 @@ const startUser = async (data: command): Promise<responseObject> => {
 	return response;
 };
 
-const stopUser = async (data: command): Promise<responseObject> => {
+const stopUser = async (data: ICommand): Promise<responseObject> => {
 	let responseObject = {
 		valid: false,
 		message: "Invalid data",
@@ -69,7 +68,7 @@ const stopUser = async (data: command): Promise<responseObject> => {
 	return responseObject;
 };
 
-function createDocument(data: command) {
+function createDocument(data: ICommand) {
 	return new commandModel({
 		userId: data.userId,
 		command: data.command,

@@ -1,8 +1,7 @@
 import { raw, Request, Response } from "express";
 import { DataParser } from "@src/classes/dataParser";
-import { commandModel } from "@src/models/commands";
 import { splitTimeObject } from "@src/types/main.types";
-import { command, isCommand } from "@src/models/commands";
+import { ICommand, ICommandBaseDocument, commandModel, isCommand } from "@models/commands";
 import { isArray } from "lodash";
 
 export async function loadTestingData(req: Request, res: Response): Promise<Response> {
@@ -12,7 +11,7 @@ export async function loadTestingData(req: Request, res: Response): Promise<Resp
 	return res;
 }
 
-export async function loadData(data: command[]) {
+export async function loadData(data: ICommand[]) {
 	const result = { valid: false, message: "" };
 	if (!isArray(data)) {
 		result.message = "Its not an array";

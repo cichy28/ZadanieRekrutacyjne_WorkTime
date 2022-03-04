@@ -47,7 +47,7 @@ const startApp = async (): Promise<any> => {
 		console.log("database connected");
 		await app.listen(port);
 		console.log("server started");
-		return "App started correctly - localhost:3000";
+		return "App started correctly - localhost port " + port;
 	} catch (error) {
 		return `App stopped - ${error}`;
 	}

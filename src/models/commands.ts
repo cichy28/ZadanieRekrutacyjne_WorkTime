@@ -12,11 +12,11 @@ export interface ICommand {
 }
 
 export interface ICommandBaseDocument extends ICommand, Document {
-	findLastCommandFromUser(this: Model<ICommandBaseDocument>, id: string): Promise<ICommandBaseDocument>;
+	findAllCommandsFromUser(this: Model<ICommandBaseDocument>, userId: string): Promise<ICommandBaseDocument[]>;
 }
 
 export interface ICommandBaseModel extends Model<ICommandBaseDocument> {
-	findLastCommandFromUser(this: Model<ICommandBaseDocument>, id: string): Promise<ICommandBaseDocument>;
+	findAllCommandsFromUser(this: Model<ICommandBaseDocument>, userId: string): Promise<ICommandBaseDocument[]>;
 }
 
 const commandSchema = new Schema<ICommandBaseDocument, ICommandBaseModel>(
@@ -29,9 +29,16 @@ const commandSchema = new Schema<ICommandBaseDocument, ICommandBaseModel>(
 	{ timestamps: true, _id: false }
 );
 
-commandSchema.statics.findLastCommandFromUser = async function (this: Model<ICommandBaseDocument>, id: string) {
-	console.log("asdasda JC@22");
-	return this.findOne({ id });
+commandSchema.statics.findAllCommandsFromUser = async function (this: Model<ICommandBaseDocument>, userId: string) {
+	return this.find(
+		{ $and: [{ userId: userId }], $or: [{ command: "startUser" }, { command: "stopUser" }] },
+		{ _id: 0, userId: 1, command: 1, description: 1, timestamp: 1 }
+	)
+		.lean()
+		.sort({ timestamp: "desc" })
+		.catch((error) => {
+			throw error;
+		});
 };
 
 // 5. Create a Model - MongoDB
@@ -44,8 +51,8 @@ const validationSchema: JSONSchemaType<ICommand> = {
 	properties: {
 		userId: { type: "string" },
 		command: { type: "string" },
-		description: { type: "string" },
-		timestamp: { type: "string" },
+		description: { type: "string", nullable: true },
+		timestamp: { type: "string", nullable: true },
 	},
 	required: ["userId", "command"],
 	additionalProperties: false,
@@ -53,4 +60,4 @@ const validationSchema: JSONSchemaType<ICommand> = {
 
 // 3. Create validation function - AJV
 
-const isCommand = ajv.compile(validationSchema);
+export const isCommand = ajv.compile(validationSchema);
