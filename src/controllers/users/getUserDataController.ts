@@ -1,58 +1,10 @@
 import { raw, Request, Response } from "express";
-import { DataParser } from "@classes/dataParser";
-import { splitTimeObject } from "@src/types/main.types";
-import { ICommand, ICommandBaseDocument, commandModel } from "@models/commands";
-import * as _ from "lodash";
-
-const dataParser = new DataParser();
-
-type chartType = { x: string[]; y: number[]; type: string }[] | null;
-
-export async function prepareChartData(rawData: ICommandBaseDocument[]) {
-	if (rawData === undefined || rawData.length <= 0) return null;
-	const data = dataParser.splitArrayToArrayOfArrays(rawData, 2);
-	if (data === null) return null;
-	let reducedObject: splitTimeObject = {
-		beginDate: new Date(),
-		endDate: new Date(),
-		object: {},
-	};
-	const reducedData = [];
-	for (const element of data) {
-		reducedObject.beginDate = new Date(String(element[1].timestamp));
-		reducedObject.endDate = new Date(String(element[0].timestamp));
-		reducedObject.object = element[0];
-		reducedData.push(Object.assign({}, reducedObject));
-	}
-	const splitedData = [];
-	for (let timeElement of reducedData) {
-		const pushObject = dataParser.splitTimeObjectToArrayOfObjects(timeElement);
-		if (pushObject !== null) splitedData.push(pushObject);
-	}
-	const test = splitedData.reverse().flat();
-	const chartData: chartType = [{ x: [], y: [], type: "bar" }];
-	chartData[0].x = Object.values(test)
-		.map((element) => element.beginDate.toDateString())
-		.filter((value, index, self) => self.indexOf(value) == index);
-	let i = 0;
-	let summOfTimeInMs = 0;
-	for (const element of test) {
-		if (chartData[0].x[i] === element.beginDate.toDateString()) {
-			summOfTimeInMs += element.endDate.getUTCSeconds() - element.beginDate.getUTCSeconds();
-		} else {
-			chartData[0].y.push(summOfTimeInMs);
-			summOfTimeInMs = 0;
-			i++;
-		}
-	}
-	chartData[0].y.push(summOfTimeInMs);
-	return chartData;
-}
+import { ICommand, ICommandBaseDocument, CommandModel } from "@models/commands";
 
 export const getUserData = async function (req: Request, res: Response): Promise<Response> {
 	if (req.query.userId === undefined) return res.status(400).send("userId not found");
-	const userCommands = await commandModel.findAllCommandsFromUser(String(req.query.userId));
-	const chartData = await prepareChartData(userCommands);
+	const userCommands = await CommandModel.findAllDocumentsFromUser(String(req.query.userId));
+	const chartData = CommandModel.parseCommandsToActivityTime(userCommands);
 	if (chartData === null) res.send("No data available").status(400);
 	return res.status(200).send(chartData);
 };

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CommandRequest } from "@src/types/routes.types";
-import { ICommand, ICommandBaseDocument, commandModel, isCommand } from "@models/commands";
+import { ICommand, ICommandBaseDocument, CommandModel, isCommand } from "@models/commands";
 
 interface responseObject {
 	valid: boolean;
@@ -30,7 +30,7 @@ const startUser = async (data: ICommand): Promise<responseObject> => {
 		message: "Invalid data",
 	};
 	const newRecord = createDocument(data);
-	const lastRecord = await commandModel.findOne({ userId: data.userId }).sort({ createdAt: "desc" });
+	const lastRecord = await CommandModel.getLastDocumentFromUser(data.userId);
 
 	if (lastRecord === null || lastRecord.command === "stopUser") {
 		await newRecord.save();
@@ -52,7 +52,7 @@ const stopUser = async (data: ICommand): Promise<responseObject> => {
 		message: "Invalid data",
 	};
 	const newRecord = createDocument(data);
-	const lastRecord = await commandModel.findOne({ userId: data.userId }).sort({ createdAt: "desc" });
+	const lastRecord = await CommandModel.getLastDocumentFromUser(data.userId);
 
 	if (lastRecord === null || lastRecord.command === "stopUser") {
 		responseObject.message = `User ${data.userId} is not started`;
@@ -69,7 +69,7 @@ const stopUser = async (data: ICommand): Promise<responseObject> => {
 };
 
 function createDocument(data: ICommand) {
-	return new commandModel({
+	return new CommandModel({
 		userId: data.userId,
 		command: data.command,
 		description: data.description,

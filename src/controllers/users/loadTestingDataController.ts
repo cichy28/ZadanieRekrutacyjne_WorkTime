@@ -1,13 +1,11 @@
 import { raw, Request, Response } from "express";
-import { DataParser } from "@src/classes/dataParser";
-import { splitTimeObject } from "@src/types/main.types";
-import { ICommand, ICommandBaseDocument, commandModel, isCommand } from "@models/commands";
+import { ICommand, ICommandBaseDocument, CommandModel, isCommand } from "@models/commands";
 import { isArray } from "lodash";
 
 export async function loadTestingData(req: Request, res: Response): Promise<Response> {
-	const message = await loadData(req.body);
-	res.status(400).send(message.message);
-	if (message.valid) res.status(200);
+	const result = await loadData(req.body);
+	res.status(400).send(result.message);
+	if (result.valid) res.status(200);
 	return res;
 }
 
@@ -24,7 +22,7 @@ export async function loadData(data: ICommand[]) {
 		}
 	}
 	for (const element of data) {
-		let newRecord = new commandModel(element);
+		let newRecord = new CommandModel(element);
 		await newRecord.save();
 	}
 	result.message = `Data uploaded correctly`;
