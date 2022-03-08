@@ -1,4 +1,4 @@
-import { Schema, model, Model } from "mongoose";
+import { Schema, model, Model, Types } from "mongoose";
 import { DataParser } from "@classes/dataParser";
 import { splitTimeObject } from "@src/types/main.types";
 import Ajv, { JSONSchemaType } from "ajv";
@@ -11,6 +11,7 @@ export interface ICommand {
 	command: string;
 	description?: string;
 	timestamp?: string;
+	_id: Types.ObjectId;
 }
 
 export interface ICommandBaseDocument extends ICommand, Document {
@@ -32,7 +33,7 @@ const commandSchema = new Schema<ICommandBaseDocument, ICommandBaseModel>(
 		description: { type: String, required: false },
 		timestamp: { type: String, required: false },
 	},
-	{ timestamps: true, _id: true }
+	{ timestamps: false, _id: true }
 );
 
 commandSchema.statics.findAllDocumentsFromUser = async function (this: Model<ICommandBaseDocument>, userId: string) {
@@ -48,7 +49,7 @@ commandSchema.statics.findAllDocumentsFromUser = async function (this: Model<ICo
 };
 
 commandSchema.statics.getLastDocumentFromUser = async function (this: Model<ICommandBaseDocument>, userId: string) {
-	return this.findOne({ userId: userId }).sort({ createdAt: "desc" });
+	return this.find({ userId: userId }).sort({ createdAt: "desc" });
 };
 
 type chartType = { x: string[]; y: number[]; type: string }[] | null;
