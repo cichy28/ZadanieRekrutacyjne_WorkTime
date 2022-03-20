@@ -83,12 +83,12 @@ commandSchema.statics.parseCommandsToActivityTime = function (rawData: ICommandB
 		.filter((value, index, self) => self.indexOf(value) == index);
 	let i = 0;
 	let summOfTimeInMs = 0;
-	for (const element of test) {
-		if (chartData[0].x[i] === element.beginDate.toDateString()) {
-			summOfTimeInMs += element.endDate.getUTCSeconds() - element.beginDate.getUTCSeconds();
-		} else {
+	for (let element of test) {
+		let diff = element.endDate.getTime() / 1000 - element.beginDate.getTime() / 1000;
+		summOfTimeInMs += diff;
+		if (chartData[0].x[i] !== element.beginDate.toDateString()) {
 			chartData[0].y.push(summOfTimeInMs);
-			summOfTimeInMs = 0;
+			summOfTimeInMs = diff;
 			i++;
 		}
 	}

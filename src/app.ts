@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import swaggerUi from "swagger-ui-express";
 import morgan from "morgan";
 import { mainRouter } from "@src/routes/mainRouter";
+import { PythonShell } from "python-shell";
 
 const { MongoClient } = require("mongodb");
 
@@ -12,12 +13,12 @@ const swaggerDefinition = require("../swagger.json");
 const expressValidator = require("express-validator");
 
 // Swager
-const options = {
+const swagerOptions = {
 	swaggerDefinition,
 	// Note that this path is relative to the current directory from which the Node.js is ran, not the application itself.
 	apis: ["./src/routes/**/*.ts"],
 };
-const swaggerSpec = swaggerJSDoc(options);
+const swaggerSpec = swaggerJSDoc(swagerOptions);
 
 // Express
 let port = process.env.PORT;
@@ -47,6 +48,27 @@ const startApp = async (): Promise<any> => {
 		console.log("database connected");
 		await app.listen(port);
 		console.log("server started");
+		// test python
+
+		let pythonOptions = {
+			pythonOptions: ["-u"], // get print results in real-time
+			scriptPath: "energyCalculator/src",
+			args: ["value1", "value2", "value3"],
+		};
+
+		let pyshell = new PythonShell("createTimeTable.py", pythonOptions);
+
+		pyshell.on("message", function (message) {
+			// received a message sent from the Python script (a simple "print" statement)
+			console.log(message);
+		});
+
+		pyshell.end(function (err, code, signal) {
+			if (err) throw err;
+			console.log("The exit code was: " + code);
+			console.log("The exit signal was: " + signal);
+			console.log("finished");
+		});
 		return "App started correctly - localhost port " + port;
 	} catch (error) {
 		return `App stopped - ${error}`;

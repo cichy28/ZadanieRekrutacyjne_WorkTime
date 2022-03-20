@@ -5,13 +5,12 @@ export class DataParser {
 
 	public splitArrayToArrayOfArrays<T>(array: Array<T>, numberOfElementsInArray: number): Array<Array<T>> | null {
 		if (array.length < numberOfElementsInArray) return null;
-		let chunks = [],
-			i = 0,
-			n = array.length;
-		while (i <= n) {
-			chunks.push(array.slice(i, (i += numberOfElementsInArray)));
+		const res = [];
+		for (let i = 0; i < array.length; i += numberOfElementsInArray) {
+			const chunk = array.slice(i, i + numberOfElementsInArray);
+			res.push(chunk);
 		}
-		return chunks;
+		return res;
 	}
 
 	public splitTimeObjectToArrayOfObjects(x: splitTimeObject): Array<splitTimeObject> | null {

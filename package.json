@@ -4,10 +4,11 @@
 	"description": "Worktime counter",
 	"main": "dist/app.js",
 	"scripts": {
-		"dev_start": "ts-node-dev --transpile-only  --trace-warnings -r tsconfig-paths/register ./src/app.ts",
+		"dev_start_app": "ts-node-dev --transpile-only  --trace-warnings -r tsconfig-paths/register ./src/app.ts",
+		"dev_start_energyCalculator": "python energyCalculator/src/main.py",
 		"commit+add": "git add -A && git commit && git push",
 		"deploy": "git add . && git commit -m Heroku && git push heroku master",
-		"test_model": "npx jest commands.test.ts",
+		"test_model": "npx jest dataParser.test.ts",
 		"test_all": "jest src",
 		"start": "node .",
 		"postinstall": "tsc"
@@ -27,6 +28,7 @@
 		"morgan": "^1.10.0",
 		"plotly": "^1.0.6",
 		"plotly.js-dist": "^2.8.3",
+		"python-shell": "^3.0.1",
 		"swagger-jsdoc": "^6.1.0",
 		"swagger-ui-express": "^4.3.0",
 		"typescript": "^4.5.4"
