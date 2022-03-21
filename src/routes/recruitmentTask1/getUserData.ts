@@ -1,5 +1,5 @@
 import express from "express";
-import { getUserData } from "@src/controllers/users/getUserDataController";
+import { getUserData } from "@src/controllers/recruitmentTask1/getUserDataController";
 
 export const routes = express.Router({ mergeParams: true });
 routes.get("/", getUserData);

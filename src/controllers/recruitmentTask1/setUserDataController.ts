@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CommandRequest } from "@src/types/routes.types";
-import { ICommand, ICommandBaseDocument, CommandModel, isCommand } from "@models/commands";
+import { ICommand, ICommandBaseDocument, CommandModel, isCommand } from "@models/recruitmentTask1/commands";
 
 interface responseObject {
 	valid: boolean;

@@ -2,10 +2,10 @@ import express from "express";
 
 const mainRouter = express.Router({ mergeParams: true });
 
-import { getUserData } from "@controllers/getUserDataController";
-import { renderUserData } from "@controllers/renderUserDataController";
-import { loadTestingData } from "@controllers/loadTestingDataController";
-import { setUserData } from "@controllers/setUserDataController";
+import { getUserData } from "@src/controllers/recruitmentTask1/getUserDataController";
+import { renderUserData } from "@src/controllers/recruitmentTask1/renderUserDataController";
+import { loadTestingData } from "@src/controllers/recruitmentTask1/loadTestingDataController";
+import { setUserData } from "@src/controllers/recruitmentTask1/setUserDataController";
 
 // Endppoints
 mainRouter.use("/users/getUserData", getUserData);

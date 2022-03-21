@@ -1,5 +1,5 @@
 import express from "express";
-import { loadTestingData } from "@src/controllers/users/loadTestingDataController";
+import { loadTestingData } from "@src/controllers/recruitmentTask1/loadTestingDataController";
 
 export const routes = express.Router({ mergeParams: true });
 routes.post("/", loadTestingData);

@@ -1,5 +1,5 @@
 import { raw, Request, Response } from "express";
-import { ICommand, ICommandBaseDocument, CommandModel, isCommand } from "@models/commands";
+import { ICommand, ICommandBaseDocument, CommandModel, isCommand } from "@models/recruitmentTask1/commands";
 import { isArray } from "lodash";
 
 export async function loadTestingData(req: Request, res: Response): Promise<Response> {

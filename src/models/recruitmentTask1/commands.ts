@@ -1,5 +1,5 @@
 import { Schema, model, Model, Types } from "mongoose";
-import { DataParser } from "@classes/dataParser";
+import { DataParser } from "@classes/recruitmentTask1/dataParser";
 import { splitTimeObject } from "@src/types/main.types";
 import Ajv, { JSONSchemaType } from "ajv";
 
@@ -49,7 +49,7 @@ commandSchema.statics.findAllDocumentsFromUser = async function (this: Model<ICo
 };
 
 commandSchema.statics.getLastDocumentFromUser = async function (this: Model<ICommandBaseDocument>, userId: string) {
-	return this.find({ userId: userId }).sort({ createdAt: "desc" });
+	return this.findOne({ userId: userId }).sort({ _id: -1 });
 };
 
 type chartType = { x: string[]; y: number[]; type: string }[] | null;

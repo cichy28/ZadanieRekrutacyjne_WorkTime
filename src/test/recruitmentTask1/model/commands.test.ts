@@ -1,4 +1,4 @@
-import { ICommand, ICommandBaseDocument, CommandModel, isCommand } from "@models/commands";
+import { ICommand, ICommandBaseDocument, CommandModel, isCommand } from "@models/recruitmentTask1/commands";
 import mongoose from "mongoose";
 import { createCompilerHost } from "typescript";
 

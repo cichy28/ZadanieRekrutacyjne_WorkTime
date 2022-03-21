@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
-	<%- include('./partials/head.ejs') %>
+	<%- include('../partials/head.ejs') %>
 	<body>
 		<div>
-			<%- include('./partials/nav.ejs') %>
+			<%- include('../partials/nav.ejs') %>
 			<div class="main-style content">
 				<div id="chart"></div>
 				<form action="/users/renderUserData" method="get">
@@ -12,7 +12,7 @@
 					<button id="getDataButton">Get data</button><br />
 				</form>
 			</div>
-			<%- include('./partials/foot.ejs') %>
+			<%- include('../partials/foot.ejs') %>
 		</div>
 	</body>
 	<script>

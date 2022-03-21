@@ -8,11 +8,7 @@ from configs.tarifs import *
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from configs.tarifs import basicParameters
-import os
 
-
-cwd = os.getcwd()
-print(cwd)
 pd.set_option('display.max_columns', 5)
 pd.set_option('display.max_rows', 20)
 

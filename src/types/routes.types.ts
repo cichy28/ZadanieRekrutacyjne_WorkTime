@@ -1,4 +1,4 @@
-import { ICommand } from "@src/models/commands";
+import { ICommand } from "@models/recruitmentTask1/commands";
 
 export interface TypedRequestBody<T> extends Express.Request {
 	params: T;

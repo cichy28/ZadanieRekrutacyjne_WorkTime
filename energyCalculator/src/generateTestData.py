@@ -13,5 +13,4 @@ df['ActivePowerConsumption'] = np.random.randint(20,30, size=len(df))
 df['ReactivePowerConsumption'] = np.random.randint(5,10, size=len(df))
 df['PowerFactor'] = np.random.rand(len(df))
 df['OrderedPower'] = 10
-df.to_csv("testData_df")
-print(df)
+df.to_csv("public/testData_df")

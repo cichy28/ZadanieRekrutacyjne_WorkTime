@@ -44,8 +44,9 @@
 		"paths": {
 			"@models/*": ["src/models/*"],
 			"@classes/*": ["src/classes/*"],
-			"@controllers/*": ["src/controllers/users/*"],
+			"@controllers/*": ["src/controllers/*"],
 			"@src/*": ["src/*"],
+			"@views/*": ["src/views/*"],
 			"@public/*": ["public/*"],
 			"@energyCalculator/*": ["energyCalculator/*"]
 		},

@@ -1,5 +1,5 @@
 import express from "express";
-import { setUserData } from "@src/controllers/users/setUserDataController";
+import { setUserData } from "@src/controllers/recruitmentTask1/setUserDataController";
 
 export const routes = express.Router({ mergeParams: true });
 routes.post("/", setUserData);
