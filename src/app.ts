@@ -3,8 +3,8 @@ import express from "express";
 import mongoose from "mongoose";
 import swaggerUi from "swagger-ui-express";
 import morgan from "morgan";
+import multer from "multer";
 import { mainRouter } from "@src/routes/mainRouter";
-import { PythonShell } from "python-shell";
 
 const { MongoClient } = require("mongodb");
 
@@ -41,6 +41,17 @@ app.set("view engine", "ejs");
 app.set("views", "./src/views");
 // MongoDB
 const uri = "mongodb+srv://JC:JC123@cluster0.of2pn.mongodb.net/Task_TimeWork?retryWrites=true&w=majority";
+// Multer
+const upload = multer({ dest: "uploads/" });
+
+var storage = multer.diskStorage({
+	destination: (req, file, callBack) => {
+		callBack(null, "./uploads/");
+	},
+	filename: (req, file, callBack) => {
+		callBack(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+	},
+});
 
 const startApp = async (): Promise<any> => {
 	try {

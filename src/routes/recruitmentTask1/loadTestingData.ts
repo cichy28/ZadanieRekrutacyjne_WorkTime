@@ -1,12 +1,13 @@
 import express from "express";
 import { loadTestingData } from "@src/controllers/recruitmentTask1/loadTestingDataController";
 
-export const routes = express.Router({ mergeParams: true });
-routes.post("/", loadTestingData);
+const loadTestingDataRoute = express.Router({ mergeParams: true });
+loadTestingDataRoute.get("/", loadTestingData);
+module.exports = loadTestingDataRoute;
 
 /**
  * @swagger
- * /users/loadTestingData:
+ * /recruitmentTask1/loadTestingData:
  *   post:
  *     summary: 'Generate test data.'
  *     description: 'Generate test data. You can get example of data from public folder -'

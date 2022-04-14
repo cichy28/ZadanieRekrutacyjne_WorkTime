@@ -1,12 +1,13 @@
 import express from "express";
 import { setUserData } from "@src/controllers/recruitmentTask1/setUserDataController";
 
-export const routes = express.Router({ mergeParams: true });
-routes.post("/", setUserData);
+const setUserDataRoute = express.Router({ mergeParams: true });
+setUserDataRoute.get("/", setUserData);
+module.exports = setUserDataRoute;
 
 /**
  * @swagger
- * /users/setUserData:
+ * /recruitmentTask1/setUserData:
  *   post:
  *     summary: Start.
  *     requestBody:

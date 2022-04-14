@@ -47,6 +47,7 @@
 			"@controllers/*": ["src/controllers/*"],
 			"@src/*": ["src/*"],
 			"@views/*": ["src/views/*"],
+			"@routes/*": ["src/routes/*"],
 			"@public/*": ["public/*"],
 			"@energyCalculator/*": ["energyCalculator/*"]
 		},
