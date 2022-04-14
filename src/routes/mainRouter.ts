@@ -1,4 +1,5 @@
 import express from "express";
+import { DataModel, IDataFiles, ICsvRow } from "@models/energyCounter/dataFIles";
 
 const mainRouter = express.Router();
 
@@ -25,9 +26,14 @@ mainRouter.use("/energyCounter/createTable", createTableRoute);
 mainRouter.use("/energyCounter/uploadData", uploadDataRoute);
 mainRouter.use("/energyCounter/sendReport", sendRaportRoute);
 
-mainRouter.get("/energyCounter", (req, res) => {
-	res.render("energyCounter/main", { buttons: true });
+mainRouter.get("/energyCounter", async (req, res) => {
+	const datasets = await DataModel.find({}, { data: 0 });
+	console.log(datasets);
+	res.render("energyCounter/main", { buttons: true, datasets: datasets });
 });
+
+{
+}
 
 mainRouter.get("/", (req, res) => {
 	res.render("main", { buttons: true });

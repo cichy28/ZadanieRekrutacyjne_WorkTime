@@ -101,3 +101,18 @@ textarea {
 	margin: 0 auto;
 	display: block;
 }
+.main-style table {
+	max-width: 400px;
+	margin-top: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	height: 120px;
+	text-align: center;
+	align-content: center;
+	border: 1px solid;
+}
+.main-style th {
+	border-bottom: 1px solid #ddd;
+	background-color: crimson;
+	color: white;
+}

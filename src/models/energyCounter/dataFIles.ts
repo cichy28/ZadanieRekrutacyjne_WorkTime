@@ -5,27 +5,33 @@ import Ajv, { JSONSchemaType } from "ajv";
 
 const ajv = new Ajv();
 
+export interface ICsvRow {
+	timestamp: Date;
+	energyUsed: number;
+	energyReturend: number;
+}
+
 // 1. Create an interface representing a document in MongoDB.
 export interface IDataFiles {
 	userId: string;
-	data: {};
-	_id: Types.ObjectId;
+	data: ICsvRow[];
+	_id?: Types.ObjectId;
 }
 
 export interface IDataBaseDocument extends IDataFiles, Document {}
 
 export interface IDataBaseModel extends Model<IDataBaseDocument> {}
 
-const commandSchema = new Schema<IDataBaseDocument, IDataBaseModel>(
+const dataFilesSchema = new Schema<IDataBaseDocument, IDataBaseModel>(
 	{
-		userId: { type: String},
+		userId: { type: String },
 		data: { type: {}, required: true },
 	},
 	{ timestamps: true, _id: true }
 );
 
 // 5. Create a Model - MongoDB
-export const DataModel = model<IDataBaseDocument, IDataBaseModel>("Commands", commandSchema);
+export const DataModel = model<IDataBaseDocument, IDataBaseModel>("dataFiles", dataFilesSchema);
 
 // 2. Create a validation schema - AJV.
 

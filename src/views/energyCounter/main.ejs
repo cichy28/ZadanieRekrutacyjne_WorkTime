@@ -5,20 +5,36 @@
 		<div>
 			<%- include('../partials/nav.ejs') %>
 			<div class="main-style content">
-				<h3>Create table for tarif</h3>
-				<form action="/energyCounter/createTable" method="get">
-					<button id="createTable">Create table</button><br />
-				</form>
+				<h3>Available datasets</h3>
+				<table>
+					<th>Dataset</th>
+					<th>Created at</th>
+					<% for(var i=0; i < datasets.length; i++) { %>
+					<tr>
+						<td><%= datasets[i].userId %></td>
+						<td><%= datasets[i].createdAt %></td>
+					</tr>
+					<% } %>
+				</table>
 				<h3>Upload data</h3>
 				<form action="/energyCounter/uploadData" enctype="multipart/form-data" method="post">
+					<label for="user">User name:</label>
+					<input type="text" id="userId" required name="userId" />
 					<input type="file" id="uploadData" name="uploadData" accept="csv" />
-					<input type="submit" value="uploadData" />
+					<button id="uploadData">Upload</button><br />
 				</form>
-				<h3>Render data</h3>
+
+				<h3>Generate report</h3>
 				<form action="/energyCounter/sendReport" method="post">
+					<label for="user">User name:</label>
+					<input type="text" id="userId" required name="userId" />
 					<label for="user">Email:</label>
 					<input type="email" id="email" required name="email" />
 					<button id="sendReport">Send</button><br />
+				</form>
+				<h3>Create new tarif table</h3>
+				<form action="/energyCounter/createTable" method="get">
+					<button id="createTable">Create table</button><br />
 				</form>
 			</div>
 			<%- include('../partials/foot.ejs') %>
