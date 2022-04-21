@@ -20,6 +20,11 @@
 				<form action="/energyCounter/uploadData" enctype="multipart/form-data" method="post">
 					<label for="user">User name:</label>
 					<input type="text" id="userId" required name="userId" />
+					<label for="user">Energy meter schema:</label>
+					<datalist id="tarifsList">
+						<option value="Shelly3EM"></option>
+					</datalist>
+					<input type="text" id="userId" required name="userId" />
 					<input type="file" id="uploadData" name="uploadData" accept="csv" />
 					<button id="uploadData">Upload</button><br />
 				</form>
@@ -28,6 +33,24 @@
 				<form action="/energyCounter/sendReport" method="post">
 					<label for="user">User name:</label>
 					<input type="text" id="userId" required name="userId" />
+					<label for="user">Tarif</label>
+					<input type="text" id="tarif" required name="tarif" />
+					<datalist id="tarifsList">
+						<option value="C21"></option>
+						<option value="C22"></option>
+					</datalist>
+					<label for="user">Ordered power</label>
+					<input
+						type="number"
+						id="orderedPower"
+						required
+						name="orderedPower"
+						min="0"
+						placeholder="1.0"
+						step="0.01"
+					/>
+					<label for="user">Power connection ID</label>
+					<input type="text" id="powerConnectionId" required name="powerConnectionId" />
 					<label for="user">Email:</label>
 					<input type="email" id="email" required name="email" />
 					<button id="sendReport">Send</button><br />

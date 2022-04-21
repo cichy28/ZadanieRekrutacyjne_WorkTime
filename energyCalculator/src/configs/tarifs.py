@@ -12,6 +12,10 @@ varParameters = {
     'country': 'PL',
     'tarifName': 'B22',
     'baseVarPrice': 100,
+    'price_Stała': 14.04,
+    'price_Przejsciowa': 0.19,
+    'price_Jakosciowa': 10.18,
+    'price_Abonamentowa': 10.00,
     'diffVarPriceArray': [
         {
             'name': 'DziennySzczytowy_1',
@@ -93,9 +97,5 @@ varParameters = {
             'endHour': '15:59',
             'price': 47.41
         },
-    ],
-    'price_Stała': 14.04,
-    'price_Przejsciowa': 0.19,
-    'price_Jakosciowa': 10.18,
-    'price_Abonamentowa': 10.00,
+    ]
 }

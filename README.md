@@ -54,3 +54,6 @@ Kryteria techniczne:
 -  TypeScript + Python
 -  Testy
 -  Opis endpointów w standardzie OpenAPI
+
+Link do opisu faktury:
+https://energa-operator.pl/uslugi/oplaty-i-faktury/jak-czytac-fakture

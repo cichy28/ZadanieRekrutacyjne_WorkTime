@@ -24,11 +24,19 @@ export const uploadData = async function (req: Request, res: Response, next: Fun
 				energyReturend: data[2],
 			});
 		})
+		.on("error", (error) => {
+			return res.status(500).send(error);
+		})
 		.on("end", async () => {
 			csvData.data.shift();
 			let newDataset = new DataModel(csvData);
 			if ((await DataModel.exists({ userId: userId })) === null) {
-				await newDataset.save();
+				const saveFile = await newDataset.save();
+				if (saveFile === newDataset) {
+					fs.promises.unlink(csvFile.path).then(() => {
+						console.log("Temporary file deleted");
+					});
+				}
 				return res.status(200).send("Data uploaded");
 			} else {
 				return res.status(400).send("Dataset for this user already exists");
