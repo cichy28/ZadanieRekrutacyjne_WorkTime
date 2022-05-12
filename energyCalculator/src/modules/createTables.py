@@ -30,6 +30,7 @@ def createPriceTables(startDate, endDate, deltaInMinutes):
     timePeriods_df['Timestamp'] = pd.to_datetime(timePeriods_df['Timestamp'])
     timePeriods_df = pd.merge(baseTimePriceArray_df,timePeriods_df,how="left",left_on=None, on=["Timestamp"], validate="one_to_one")
     timePeriods_df['VariableFee'] = timePeriods_df['VariableFee'].fillna(varParameters['baseVarPrice'])
+    timePeriods_df.set_index('Timestamp')
     timePeriods_df.to_csv('public/energyMeter/' + 'T_' + varParameters['country'] + '_' + varParameters['tarifName'])
     print('energyCalculator/dataFrames/timePeriods_df')
 
@@ -46,10 +47,10 @@ def createTestDataTable(startDate, endDate, deltaInMinutes):
 
 def createCostTable(priceTablePath, dataTablePath, datasetName):
     
-    energyPricesInTime_df = pd.read_csv(absolutePath(priceTablePath))
-    energyUsageInTime_df = pd.read_csv(absolutePath(dataTablePath))
+    energyPricesInTime_df = pd.read_csv(priceTablePath)
+    energyUsageInTime_df = pd.read_csv(dataTablePath)
     energyCostInTime_df = pd.merge(energyUsageInTime_df,energyPricesInTime_df,how="left",left_on=None, on=["Timestamp"], validate="one_to_one")
     energyCostInTime_df['energyCost'] = energyCostInTime_df['ActivePowerConsumption'] * energyCostInTime_df['VariableFee']
-    energyCostInTime_df.to_csv(datasetName)
+    energyCostInTime_df.to_csv('public/energyMeter/' + datasetName)
     return energyCostInTime_df
 

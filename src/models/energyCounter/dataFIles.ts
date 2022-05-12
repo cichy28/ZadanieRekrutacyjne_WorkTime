@@ -13,7 +13,11 @@ export interface ICsvRow {
 
 // 1. Create an interface representing a document in MongoDB.
 export interface IDataFiles {
-	userId: string;
+	nameOfDataset: String;
+	tarif: String;
+	orderedPower: Number;
+	powerConnectionId: String;
+	userId: String;
 	data: ICsvRow[];
 	_id?: Types.ObjectId;
 }
@@ -24,8 +28,12 @@ export interface IDataBaseModel extends Model<IDataBaseDocument> {}
 
 const dataFilesSchema = new Schema<IDataBaseDocument, IDataBaseModel>(
 	{
+		nameOfDataset: { type: String },
 		userId: { type: String },
-		data: { type: {}, required: true },
+		tarif: { type: String },
+		orderedPower: { type: Number },
+		powerConnectionId: { type: String },
+		data: { type: [], required: true },
 	},
 	{ timestamps: true, _id: true }
 );

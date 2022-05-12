@@ -5,7 +5,8 @@
 	"main": "dist/app.js",
 	"scripts": {
 		"dev_start_app": "ts-node-dev --transpile-only  --trace-warnings -r tsconfig-paths/register ./src/app.ts",
-		"dev_start_energyCalculator": "python energyCalculator/src/main.py",
+		"test_energyCalculator": "python energyCalculator/src/main.py -p -d -m",
+		"show_energyCalculator": "python energyCalculator/src/main.py -s",
 		"commit+add": "git add -A && git commit && git push",
 		"deploy": "git add . && git commit -m Heroku && git push heroku master",
 		"test_model": "npx jest dataParser.test.ts",

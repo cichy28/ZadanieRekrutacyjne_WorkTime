@@ -1,9 +1,9 @@
 import express from "express";
-import { createTable } from "@src/controllers/energyCounter/createTable";
+import { showChart } from "@src/controllers/energyCounter/showChart";
 
-const createTableRoute = express.Router({ mergeParams: true });
-createTableRoute.get("/", createTable);
-module.exports = createTableRoute;
+const showChartRoute = express.Router({ mergeParams: true });
+showChartRoute.get("/", showChart);
+module.exports = showChartRoute;
 
 /**
  * @swagger

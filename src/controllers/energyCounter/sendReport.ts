@@ -15,7 +15,7 @@ const runCalculatingScript = () => {
 	const pythonOptions = {
 		pythonOptions: ["-u"], // get print results in real-time
 		scriptPath: "energyCalculator/src",
-		args: ["value1", "value2", "value3"],
+		args: ["-s"],
 	};
 
 	let pyshell = PythonShell.run("createTimeTable.py", pythonOptions);

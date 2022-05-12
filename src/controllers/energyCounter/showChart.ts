@@ -5,10 +5,10 @@ import { PythonShell } from "python-shell";
 let pythonOptions = {
 	pythonOptions: ["-u"], // get print results in real-time
 	scriptPath: "energyCalculator/src",
-	args: ["-p", "-m"],
+	args: ["-s"],
 };
 
-export const createTable = async function (req: Request, res: Response): Promise<Response> {
+export const showChart = async function (req: Request, res: Response): Promise<Response> {
 	let pyshell = PythonShell.run("main.py", pythonOptions);
 
 	pyshell.on("message", function (message) {
@@ -21,6 +21,6 @@ export const createTable = async function (req: Request, res: Response): Promise
 		console.log("The exit code was: " + code);
 		console.log("The exit signal was: " + signal);
 		console.log("Success");
-		return res.status(200).send("Table created");
+		return res.status(200).send("Chart rendered");
 	});
 };
