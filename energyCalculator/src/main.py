@@ -4,17 +4,17 @@ import os as os
 from pathlib import Path
 import pandas as pd
 import json
+import importlib
 from datetime import datetime, timedelta
 import plotly.express as px
 from modules.functions import *
 from modules.createTables import *
-from configs.tarifs import *
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from configs.tarifs import basicParameters
 import argparse
  
 parser = argparse.ArgumentParser(description="Energu counter", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('--config', required=True)
 parser.add_argument("-p", "--priceTable", action="store_true", help="create table with prices")
 parser.add_argument("-d", "--dataTable", action="store_true", help="create table with test data")
 parser.add_argument("-m", "--mergeTables", action="store_true", help="create merged tables with data and prices")
@@ -26,13 +26,18 @@ print(args)
 pd.set_option('display.max_columns', 5)
 pd.set_option('display.max_rows', 20)
 
-# if args['priceTable']:
-createPriceTables('2021-01-01','2022-01-01', 15)
-# if args['dataTable']:
-#     createTestDataTable('2021-01-01','2022-01-01', 15)
-# if args['mergeTables']:
-# createCostTable("public/energyMeter/T_PL_B22","public/energyMeter/testData_df",'energyCost_df')
+_config = importlib.import_module('configs.'+ args['config'])
+varParameters = _config.varParameters
+basicParameters = _config.basicParameters
+
+if args['priceTable']:
+    createPriceTables('2020-01-01','2021-01-01', 15, varParameters, basicParameters)
+if args['dataTable']:
+    createTestDataTable('2020-01-01','2021-01-01', 15)
+if args['mergeTables']:
+    createCostTable("public/energyMeter/T_PL_B22","public/energyMeter/testData_df",'energyCost_df')
 if args['showChart']:
+    pd.set_option('display.max_columns', None)
     energyCostInTime_df = pd.read_csv('public/energyMeter/energyCost_df')
     print(energyCostInTime_df)
     fig = make_subplots(rows=4, cols=1,

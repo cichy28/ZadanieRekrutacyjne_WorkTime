@@ -11,6 +11,7 @@ basicParameters = {
 varParameters = {
     'country': 'PL',
     'tarifName': 'B22',
+    'year': 2020,
     'baseVarPrice': 100,
     'price_Stała': 14.04,
     'price_Przejsciowa': 0.19,
