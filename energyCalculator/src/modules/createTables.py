@@ -1,4 +1,5 @@
-from importlib.resources import path
+import importlib
+import logging
 import numpy as np
 import pandas as pd
 import json
@@ -8,8 +9,7 @@ from modules.functions import *
 
 
 
-def createPriceTables(startDate, endDate, deltaInMinutes, varParameters, basicParameters):
-    print(varParameters)
+def createPriceTables(startDate, endDate, deltaInMinutes, varParameters, basicParameters, priceTableName):
     index = varParameters['diffVarPriceArray'][1]
     # Create table with empty records
     timeArray = np.empty([1,3])
@@ -32,7 +32,10 @@ def createPriceTables(startDate, endDate, deltaInMinutes, varParameters, basicPa
     timePeriods_df = pd.merge(baseTimePriceArray_df,timePeriods_df,how="left", on=["Timestamp"], validate="one_to_one")
     timePeriods_df['VariableFee'] = timePeriods_df['VariableFee'].fillna(varParameters['baseVarPrice'])
     timePeriods_df.set_index('Timestamp')
-    timePeriods_df.to_csv('public/energyMeter/' + 'T_' + varParameters['country'] + '_' + varParameters['tarifName'])
+    timePeriods_df.loc[startDate:endDate]
+    priceTableName = varParameters['country'] + '_' + varParameters['tarifName'] + '_' + str(varParameters['year'])
+    logging.info('Price table created - priceTableName ')
+    timePeriods_df.to_csv('public/energyMeter/' + priceTableName)
 
 def createTestDataTable(startDate, endDate, deltaInMinutes):
     dts = [dt for dt in 
@@ -45,12 +48,26 @@ def createTestDataTable(startDate, endDate, deltaInMinutes):
     df['OrderedPower'] = 10
     df.to_csv("public/energyMeter/testData_df")
 
-def createCostTable(priceTablePath, dataTablePath, datasetName):
-    
-    energyPricesInTime_df = pd.read_csv(priceTablePath)
-    energyUsageInTime_df = pd.read_csv(dataTablePath)
+def createCostTable(tarifConfigName, dataTableName, priceTableName, interval):
+    # Get config
+    _config = importlib.import_module('configs.'+ tarifConfigName)
+    varParameters = _config.varParameters
+    basicParameters = _config.basicParameters
+    logging.info('Config ' + tarifConfigName + ' - loaded')
+    # Get dataset
+    energyUsageInTime_df = pd.read_csv("public/energyMeter/" + dataTableName)
+    beginDate = pd.to_datetime(energyUsageInTime_df.head(1)['Date/time UTC'])
+    endDate = pd.to_datetime(pd.DataFrame({'year': pd.DatetimeIndex(beginDate).year,
+                   'month': 12,
+                   'day': 31}))
+    logging.info('Data ' + dataTableName + ' - loaded')
+    # Log        
+    createPriceTables(beginDate.iloc[0].strftime('%Y-%m-%d'), endDate.iloc[0].strftime('%Y-%m-%d'),interval, varParameters, basicParameters, priceTableName)     
+    energyPricesInTime_df = pd.read_csv("public/energyMeter/" + tarifConfigName)
+    print(energyUsageInTime_df)
+    print(energyPricesInTime_df)
     energyCostInTime_df = pd.merge(energyUsageInTime_df,energyPricesInTime_df,how="left",left_on=None, on=["Timestamp"], validate="one_to_one")
     energyCostInTime_df['energyCost'] = energyCostInTime_df['ActivePowerConsumption'] * energyCostInTime_df['VariableFee']
-    energyCostInTime_df.to_csv('public/energyMeter/' + datasetName)
+    energyCostInTime_df.to_csv('public/energyMeter/' + dataTableName + '_' + priceTableName)
     return energyCostInTime_df
 
