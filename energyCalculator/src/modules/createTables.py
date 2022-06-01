@@ -56,6 +56,7 @@ def createCostTable(tarifConfigName, dataTableName, priceTableName, interval):
     logging.info('Config ' + tarifConfigName + ' - loaded')
     # Get dataset
     energyUsageInTime_df = pd.read_csv("public/energyMeter/" + dataTableName)
+    
     beginDate = pd.to_datetime(energyUsageInTime_df.head(1)['Date/time UTC'])
     endDate = pd.to_datetime(pd.DataFrame({'year': pd.DatetimeIndex(beginDate).year,
                    'month': 12,
