@@ -7,6 +7,8 @@ from datetime import datetime, timedelta
 import plotly.express as px
 from modules.functions import *
 from modules.createTables import *
+from modules.showCharts import *
+from modules.createRaport import *
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import argparse
@@ -26,56 +28,11 @@ pd.set_option('display.max_columns', 5)
 pd.set_option('display.max_rows', 20)
 
 
-if args['dataTable']:
-    createTestDataTable('2020-01-01','2021-01-01', 10)
+# if args['dataTable']:
+#     createTestDataTable('2020-01-01','2021-01-01', 15)
 if args['prepareData']:
-    createCostTable(args['config'],args['dataset'],args['dataset'] + '_' + args['config'], 10)
+    createCostTable(args['config'],args['dataset'],args['dataset'] + '_' + args['config'], 15)
 if args['showChart']:
-    pd.set_option('display.max_columns', None)
-    energyCostInTime_df = pd.read_csv('public/energyMeter/' + args['dataset'] + '_' + args['config'])
-    print(energyCostInTime_df)
-    fig = make_subplots(rows=4, cols=1,
-                        specs=[[{"type": "scatter"}],[{"type": "scatter"}],[{"type": "scatter"}],[{"type": "table"}]],
-                        shared_xaxes=True,
-                        vertical_spacing=0.05,                 
-    )
-    
-    # Add traces
-    fig.add_trace(
-        go.Scatter(x= energyCostInTime_df['Timestamp'], y=energyCostInTime_df['energyCost'], name="energyCost"),
-        row=1, col=1, secondary_y=False,
-    )
-
-    fig.add_trace(
-        go.Scatter(x= energyCostInTime_df['Timestamp'], y=energyCostInTime_df['VariableFee'], name="VariableFee"),
-        row=2, col=1, secondary_y=False,
-    )
-
-    fig.add_trace(
-        go.Scatter(x= energyCostInTime_df['Timestamp'], y=energyCostInTime_df['ActivePowerConsumption'], name="ActivePowerConsumption"),
-        row=3, col=1, secondary_y=False,
-    )
-
-    paramsNames = []
-    paramsValues = []
-    params = []
-    for piece in basicParameters:
-        paramsNames.append(piece)
-        paramsValues.append(basicParameters.get(piece))
-    params.append(paramsNames)
-    params.append(paramsValues)
-
-    fig.add_trace(
-        go.Table(
-            header=dict(
-                values=["ParameterName", "Value"],
-                font=dict(size=10),
-                align="left"
-            ),
-            cells=dict(
-                values=params,
-                align = "left")
-        ),
-        row=4, col=1
-    )
-    fig.show()
+    showPriceChart(args['config'],args['dataset'])
+if args['prepareRaport']:
+    showPricePerMonth(args['config'],args['dataset'])

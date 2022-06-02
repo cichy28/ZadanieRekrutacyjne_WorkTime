@@ -1,11 +1,13 @@
 import importlib
 import logging
+from wsgiref import headers
 import numpy as np
 import pandas as pd
 import json
 from datetime import datetime, timedelta
 from datetime import datetime, timedelta
 from modules.functions import *
+from statistics import mean
 
 
 
@@ -55,9 +57,9 @@ def createCostTable(tarifConfigName, dataTableName, priceTableName, interval):
     basicParameters = _config.basicParameters
     logging.info('Config ' + tarifConfigName + ' - loaded')
     # Get dataset
-    energyUsageInTime_df = pd.read_csv("public/energyMeter/" + dataTableName)
-    
-    beginDate = pd.to_datetime(energyUsageInTime_df.head(1)['Date/time UTC'])
+    parseDataTable(dataTableName) 
+    energyUsageInTime_df = pd.read_csv("public/energyMeter/" + dataTableName + '_parsed')
+    beginDate = pd.to_datetime(energyUsageInTime_df.head(1)['Timestamp'])
     endDate = pd.to_datetime(pd.DataFrame({'year': pd.DatetimeIndex(beginDate).year,
                    'month': 12,
                    'day': 31}))
@@ -67,8 +69,19 @@ def createCostTable(tarifConfigName, dataTableName, priceTableName, interval):
     energyPricesInTime_df = pd.read_csv("public/energyMeter/" + tarifConfigName)
     print(energyUsageInTime_df)
     print(energyPricesInTime_df)
-    energyCostInTime_df = pd.merge(energyUsageInTime_df,energyPricesInTime_df,how="left",left_on=None, on=["Timestamp"], validate="one_to_one")
+    energyCostInTime_df = pd.merge(energyPricesInTime_df,energyUsageInTime_df,how="left",left_on=None, on=["Timestamp"], validate="one_to_one")
     energyCostInTime_df['energyCost'] = energyCostInTime_df['ActivePowerConsumption'] * energyCostInTime_df['VariableFee']
-    energyCostInTime_df.to_csv('public/energyMeter/' + dataTableName + '_' + priceTableName)
+    energyCostInTime_df.to_csv('public/energyMeter/' + priceTableName)
     return energyCostInTime_df
 
+def parseDataTable(fileName):
+    energyUsageInTime_df = pd.read_csv("public/energyMeter/" + fileName, header= 1)
+    print(energyUsageInTime_df.dtypes)
+    print(energyUsageInTime_df)
+    energyUsageInTime_df['Timestamp'] = pd.to_datetime(energyUsageInTime_df['Timestamp'])
+    energyUsageInTime_df = energyUsageInTime_df.sort_values(by='Timestamp',ascending=True)
+    energyUsageInTime_df.set_index('Timestamp')
+
+    test = energyUsageInTime_df.resample(rule='15T',on='Timestamp').agg({'ActivePowerConsumption': 'mean' })
+    test.to_csv('public/energyMeter/' + fileName + '_parsed')
+    return test
