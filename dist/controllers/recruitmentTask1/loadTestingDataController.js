@@ -35,54 +35,64 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mainRouter = void 0;
-var express_1 = __importDefault(require("express"));
-var dataFIles_1 = require("@models/energyCounter/dataFIles");
-var mainRouter = express_1.default.Router();
-exports.mainRouter = mainRouter;
-var getUserDataRoute = require("@routes/recruitmentTask1/getUserData");
-var renderUserDataRoute = require("@routes/recruitmentTask1/renderUserData");
-var loadTestingDataRoute = require("@routes/recruitmentTask1/loadTestingData");
-var setUserDataRoute = require("@routes/recruitmentTask1/setUserData");
-var createTableRoute = require("@routes/energyCounter/createTable");
-var uploadDataRoute = require("@routes/energyCounter/uploadData");
-var sendRaportRoute = require("@routes/energyCounter/sendReport");
-var showChartRoute = require("@routes/energyCounter/showChart");
-// Endppoints
-mainRouter.use("/recruitmentTask1/getUserData", getUserDataRoute);
-mainRouter.use("/recruitmentTask1/renderUserData", renderUserDataRoute);
-mainRouter.use("/recruitmentTask1/loadTestingData", loadTestingDataRoute);
-mainRouter.use("/recruitmentTask1/setUserData", setUserDataRoute);
-mainRouter.get("/recruitmentTask1", function (req, res) {
-    res.render("recruitmentTask1/main", { buttons: true });
-});
-mainRouter.use("/energyCounter/createTable", createTableRoute);
-mainRouter.use("/energyCounter/uploadData", uploadDataRoute);
-mainRouter.use("/energyCounter/sendReport", sendRaportRoute);
-mainRouter.use("/energyCounter/showChart", showChartRoute);
-mainRouter.get("/energyCounter", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var datasets;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, dataFIles_1.DataModel.find({}, { data: 0 })];
-            case 1:
-                datasets = _a.sent();
-                console.log(datasets);
-                res.render("energyCounter/main", { buttons: true, datasets: datasets });
-                return [2 /*return*/];
-        }
+exports.loadData = exports.loadTestingData = void 0;
+var commands_1 = require("@models/recruitmentTask1/commands");
+var lodash_1 = require("lodash");
+function loadTestingData(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, loadData(req.body)];
+                case 1:
+                    result = _a.sent();
+                    res.status(400).send(result.message);
+                    if (result.valid)
+                        res.status(200);
+                    return [2 /*return*/, res];
+            }
+        });
     });
-}); });
-{
 }
-mainRouter.get("/", function (req, res) {
-    res.render("main", { buttons: true });
-});
-mainRouter.use("", function (req, res) {
-    console.log("No enpoint like this");
-    res.sendStatus(404);
-});
+exports.loadTestingData = loadTestingData;
+function loadData(data) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result, _i, data_1, element, _a, data_2, element, newRecord;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    result = { valid: false, message: "" };
+                    if (!(0, lodash_1.isArray)(data)) {
+                        result.message = "Its not an array";
+                        return [2 /*return*/, result];
+                    }
+                    for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
+                        element = data_1[_i];
+                        if (!(0, commands_1.isCommand)(element)) {
+                            result.message = "Incorrect object - ".concat(JSON.stringify(element));
+                            return [2 /*return*/, result];
+                        }
+                    }
+                    _a = 0, data_2 = data;
+                    _b.label = 1;
+                case 1:
+                    if (!(_a < data_2.length)) return [3 /*break*/, 4];
+                    element = data_2[_a];
+                    newRecord = new commands_1.CommandModel(element);
+                    return [4 /*yield*/, newRecord.save()];
+                case 2:
+                    _b.sent();
+                    _b.label = 3;
+                case 3:
+                    _a++;
+                    return [3 /*break*/, 1];
+                case 4:
+                    result.message = "Data uploaded correctly";
+                    result.valid = true;
+                    return [2 /*return*/, result];
+            }
+        });
+    });
+}
+exports.loadData = loadData;

@@ -35,54 +35,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mainRouter = void 0;
-var express_1 = __importDefault(require("express"));
-var dataFIles_1 = require("@models/energyCounter/dataFIles");
-var mainRouter = express_1.default.Router();
-exports.mainRouter = mainRouter;
-var getUserDataRoute = require("@routes/recruitmentTask1/getUserData");
-var renderUserDataRoute = require("@routes/recruitmentTask1/renderUserData");
-var loadTestingDataRoute = require("@routes/recruitmentTask1/loadTestingData");
-var setUserDataRoute = require("@routes/recruitmentTask1/setUserData");
-var createTableRoute = require("@routes/energyCounter/createTable");
-var uploadDataRoute = require("@routes/energyCounter/uploadData");
-var sendRaportRoute = require("@routes/energyCounter/sendReport");
-var showChartRoute = require("@routes/energyCounter/showChart");
-// Endppoints
-mainRouter.use("/recruitmentTask1/getUserData", getUserDataRoute);
-mainRouter.use("/recruitmentTask1/renderUserData", renderUserDataRoute);
-mainRouter.use("/recruitmentTask1/loadTestingData", loadTestingDataRoute);
-mainRouter.use("/recruitmentTask1/setUserData", setUserDataRoute);
-mainRouter.get("/recruitmentTask1", function (req, res) {
-    res.render("recruitmentTask1/main", { buttons: true });
-});
-mainRouter.use("/energyCounter/createTable", createTableRoute);
-mainRouter.use("/energyCounter/uploadData", uploadDataRoute);
-mainRouter.use("/energyCounter/sendReport", sendRaportRoute);
-mainRouter.use("/energyCounter/showChart", showChartRoute);
-mainRouter.get("/energyCounter", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var datasets;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, dataFIles_1.DataModel.find({}, { data: 0 })];
-            case 1:
-                datasets = _a.sent();
-                console.log(datasets);
-                res.render("energyCounter/main", { buttons: true, datasets: datasets });
-                return [2 /*return*/];
-        }
+exports.createTable = void 0;
+var python_shell_1 = require("python-shell");
+var pythonOptions = {
+    pythonOptions: ["-u"],
+    scriptPath: "energyCalculator/src",
+    args: ["-p", "-m"],
+};
+var createTable = function (req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var pyshell;
+        return __generator(this, function (_a) {
+            pyshell = python_shell_1.PythonShell.run("main.py", pythonOptions);
+            pyshell.on("message", function (message) {
+                // received a message sent from the Python script (a simple "print" statement)
+                console.log(message);
+            });
+            pyshell.end(function (err, code, signal) {
+                if (err)
+                    throw err;
+                console.log("The exit code was: " + code);
+                console.log("The exit signal was: " + signal);
+                console.log("Success");
+                return res.status(200).send("Table created");
+            });
+            return [2 /*return*/];
+        });
     });
-}); });
-{
-}
-mainRouter.get("/", function (req, res) {
-    res.render("main", { buttons: true });
-});
-mainRouter.use("", function (req, res) {
-    console.log("No enpoint like this");
-    res.sendStatus(404);
-});
+};
+exports.createTable = createTable;

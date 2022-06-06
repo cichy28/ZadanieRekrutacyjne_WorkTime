@@ -75,8 +75,7 @@ def createCostTable(tarifConfigName, dataTableName, priceTableName, interval):
     return energyCostInTime_df
 
 def parseDataTable(fileName):
-    energyUsageInTime_df = pd.read_csv("public/energyMeter/" + fileName, header= 1)
-    print(energyUsageInTime_df.dtypes)
+    energyUsageInTime_df = pd.read_csv("public/energyMeter/" + fileName)
     print(energyUsageInTime_df)
     energyUsageInTime_df['Timestamp'] = pd.to_datetime(energyUsageInTime_df['Timestamp'])
     energyUsageInTime_df = energyUsageInTime_df.sort_values(by='Timestamp',ascending=True)

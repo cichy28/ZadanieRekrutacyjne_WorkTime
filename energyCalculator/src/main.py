@@ -1,4 +1,5 @@
 import logging
+import sys
 import numpy as np
 import os as os
 from pathlib import Path
@@ -23,7 +24,14 @@ parser.add_argument("-r", "--prepareRaport", action="store_true", help="prepare 
 args = vars(parser.parse_args())
 print(args)
 
-logging.basicConfig(filename='energyCalculator.log', level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler("debug.log"),
+        logging.StreamHandler(sys.stdout)
+    ]
+)
 pd.set_option('display.max_columns', 5)
 pd.set_option('display.max_rows', 20)
 

@@ -44,18 +44,19 @@ var express_1 = __importDefault(require("express"));
 var mongoose_1 = __importDefault(require("mongoose"));
 var swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 var morgan_1 = __importDefault(require("morgan"));
+var multer_1 = __importDefault(require("multer"));
 var mainRouter_1 = require("@src/routes/mainRouter");
 var MongoClient = require("mongodb").MongoClient;
 var swaggerJSDoc = require("swagger-jsdoc");
 var swaggerDefinition = require("../swagger.json");
 var expressValidator = require("express-validator");
 // Swager
-var options = {
+var swagerOptions = {
     swaggerDefinition: swaggerDefinition,
     // Note that this path is relative to the current directory from which the Node.js is ran, not the application itself.
     apis: ["./src/routes/**/*.ts"],
 };
-var swaggerSpec = swaggerJSDoc(options);
+var swaggerSpec = swaggerJSDoc(swagerOptions);
 // Express
 var port = process.env.PORT;
 if (port == null || port == "") {
@@ -77,6 +78,16 @@ app.set("view engine", "ejs");
 app.set("views", "./src/views");
 // MongoDB
 var uri = "mongodb+srv://JC:JC123@cluster0.of2pn.mongodb.net/Task_TimeWork?retryWrites=true&w=majority";
+// Multer
+var upload = (0, multer_1.default)({ dest: "uploads/" });
+var storage = multer_1.default.diskStorage({
+    destination: function (req, file, callBack) {
+        callBack(null, "./uploads/");
+    },
+    filename: function (req, file, callBack) {
+        callBack(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+    },
+});
 var startApp = function () { return __awaiter(void 0, void 0, void 0, function () {
     var error_1;
     return __generator(this, function (_a) {
