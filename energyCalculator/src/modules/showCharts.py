@@ -18,8 +18,8 @@ def showPriceChart(tarifConfigName, datasetName):
     pd.set_option('display.max_columns', None)
     energyCostInTime_df = pd.read_csv('public/energyMeter/' + datasetName + '_' + tarifConfigName)
     print(energyCostInTime_df)
-    fig = make_subplots(rows=4, cols=1,
-                        specs=[[{"type": "scatter"}],[{"type": "scatter"}],[{"type": "scatter"}],[{"type": "table"}]],
+    fig = make_subplots(rows=5, cols=1,
+                        specs=[[{"type": "scatter"}],[{"type": "scatter"}],[{"type": "scatter"}],[{"type": "scatter"}],[{"type": "table"}]],
                         shared_xaxes=True,
                         vertical_spacing=0.05,                 
     )
@@ -38,6 +38,11 @@ def showPriceChart(tarifConfigName, datasetName):
     fig.add_trace(
         go.Scatter(x= energyCostInTime_df['Timestamp'], y=energyCostInTime_df['ActivePowerConsumption'], name="ActivePowerConsumption"),
         row=3, col=1, secondary_y=False,
+    )
+
+    fig.add_trace(
+        go.Scatter(x= energyCostInTime_df['Timestamp'], y=energyCostInTime_df['activePower'], name="activePower"),
+        row=4, col=1, secondary_y=False,
     )
 
     paramsNames = []
@@ -60,7 +65,7 @@ def showPriceChart(tarifConfigName, datasetName):
                 values=params,
                 align = "left")
         ),
-        row=4, col=1
+        row=5, col=1
     )
     fig.show()
 
@@ -78,51 +83,4 @@ def showPricePerMonth(tarifConfigName, datasetName):
     print(energyCostInTime_df)
     fig = px.bar(energyCostInTime_df, x='Timestamp', y='energyCost')
     fig.show()
-
-    # fig = make_subplots(rows=4, cols=1,
-    #                     specs=[[{"type": "scatter"}],[{"type": "scatter"}],[{"type": "scatter"}],[{"type": "table"}]],
-    #                     shared_xaxes=True,
-    #                     vertical_spacing=0.05,                 
-    # )
-    
-    # # Add traces
-    # fig.add_trace(
-    #     go.Scatter(x= energyCostInTime_df['Timestamp'], y=energyCostInTime_df['energyCost'], name="energyCost"),
-    #     row=1, col=1, secondary_y=False,
-    # )
-
-    # fig.add_trace(
-    #     go.Scatter(x= energyCostInTime_df['Timestamp'], y=energyCostInTime_df['VariableFee'], name="VariableFee"),
-    #     row=2, col=1, secondary_y=False,
-    # )
-
-    # fig.add_trace(
-    #     go.Scatter(x= energyCostInTime_df['Timestamp'], y=energyCostInTime_df['ActivePowerConsumption'], name="ActivePowerConsumption"),
-    #     row=3, col=1, secondary_y=False,
-    # )
-
-    # paramsNames = []
-    # paramsValues = []
-    # params = []
-    # for piece in basicParameters:
-    #     paramsNames.append(piece)
-    #     paramsValues.append(basicParameters.get(piece))
-    # params.append(paramsNames)
-    # params.append(paramsValues)
-
-    # fig.add_trace(
-    #     go.Table(
-    #         header=dict(
-    #             values=["ParameterName", "Value"],
-    #             font=dict(size=10),
-    #             align="left"
-    #         ),
-    #         cells=dict(
-    #             values=params,
-    #             align = "left")
-    #     ),
-    #     row=4, col=1
-    # )
-    # fig.show()
-
     

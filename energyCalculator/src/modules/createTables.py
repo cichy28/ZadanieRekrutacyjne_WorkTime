@@ -71,12 +71,12 @@ def createCostTable(tarifConfigName, dataTableName, priceTableName, interval):
     print(energyPricesInTime_df)
     energyCostInTime_df = pd.merge(energyPricesInTime_df,energyUsageInTime_df,how="left",left_on=None, on=["Timestamp"], validate="one_to_one")
     energyCostInTime_df['energyCost'] = energyCostInTime_df['ActivePowerConsumption'] * energyCostInTime_df['VariableFee']
+    energyCostInTime_df['activePower'] = energyCostInTime_df['ActivePowerConsumption'] * 4 
     energyCostInTime_df.to_csv('public/energyMeter/' + priceTableName)
     return energyCostInTime_df
 
 def parseDataTable(fileName):
-    energyUsageInTime_df = pd.read_csv("public/energyMeter/" + fileName)
-    print(energyUsageInTime_df)
+    energyUsageInTime_df = pd.read_csv("public/energyMeter/" + fileName,delimiter=';')
     energyUsageInTime_df['Timestamp'] = pd.to_datetime(energyUsageInTime_df['Timestamp'])
     energyUsageInTime_df = energyUsageInTime_df.sort_values(by='Timestamp',ascending=True)
     energyUsageInTime_df.set_index('Timestamp')
