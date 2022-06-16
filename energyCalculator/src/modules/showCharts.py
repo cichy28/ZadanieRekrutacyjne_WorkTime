@@ -1,4 +1,5 @@
 import importlib
+from turtle import title
 import numpy as np
 import pandas as pd
 from modules.functions import *
@@ -78,9 +79,61 @@ def showPricePerMonth(tarifConfigName, datasetName):
     energyCostInTime_df = pd.read_csv('public/energyMeter/' + datasetName + '_' + tarifConfigName)
     energyCostInTime_df['Timestamp'] = pd.to_datetime(energyCostInTime_df['Timestamp'])
     energyCostInTime_df.set_index('Timestamp')
-    energyCostInTime_df = energyCostInTime_df.resample(rule='M',on='Timestamp').agg({'ActivePowerConsumption': 'sum', 'energyCost': 'sum'})
-    energyCostInTime_df = energyCostInTime_df.reset_index(level=0)
     print(energyCostInTime_df)
-    fig = px.bar(energyCostInTime_df, x='Timestamp', y='energyCost')
+    # energyCostInTime_df = energyCostInTime_df.resample(rule='M',on='Timestamp').agg({'ActivePowerConsumption': 'sum', 'energyCost': 'sum'})
+    energyCostInTime_df = (energyCostInTime_df
+                            .groupby([pd.Grouper(key="Timestamp", freq='M'), 'Tag'])
+                            .sum()
+                            .filter(['energyCost', 'ActivePowerConsumption', 'Timestamp'])
+                            )
+    energyCostInTime_df = energyCostInTime_df.reset_index()
+    print(energyCostInTime_df)
+
+    # Simple sultion 
+
+    fig = px.bar(energyCostInTime_df, x="Timestamp", y="energyCost", color="Tag", title="Long-Form Input")
     fig.show()
-    
+
+    # Customizowalne ale comlicated...
+    fig = make_subplots(rows=3, cols=1,
+                            specs=[[{"type": "bar"}],[{"type": "bar"}],[{"type": "bar"}]],
+                            shared_xaxes=True,
+                            vertical_spacing=0.1, 
+                            subplot_titles=[
+                                'Energy used per month',
+                                'Cost of energy per month',
+                                'Sum - invoice value']                
+        )
+
+    # 
+    tags = energyCostInTime_df['Tag'].unique()
+    for tag in tags:
+
+        data = energyCostInTime_df[energyCostInTime_df.Tag == tag]
+        # Chart with energy consumed in each timesector
+        fig.add_trace(
+        go.Bar(x= data['Timestamp'],y = data['ActivePowerConsumption'], name=tag),
+            row=1,
+            col=1,
+            secondary_y=False
+        )
+
+        fig.add_trace(
+        go.Bar(x= data['Timestamp'],y = data['energyCost'], name=tag),
+            row=2,
+            col=1,
+            secondary_y=False
+        )
+        # Chart with summerized cost
+    data = energyCostInTime_df.groupby(['Timestamp']).sum().reset_index()
+    print(data)
+    fig.add_trace(
+    go.Bar(x= data['Timestamp'],y = data['energyCost'], name='sum'),
+        row=3,
+        col=1,
+        secondary_y=False
+    )
+
+    fig.update_layout(barmode='stack')
+    fig.show()
+        

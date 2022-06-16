@@ -19,84 +19,94 @@ varParameters = {
     'price_Abonamentowa': 10.00,
     'diffVarPriceArray': [
         {
-            'name': 'DziennySzczytowy_1',
+            'id': 'DziennySzczytowy_1',
             'beginDate': np.datetime64('2019-01-01'),
             'endDate': np.datetime64('2019-12-31'),
             'beginHour': '08:00',
             'endHour': '10:59',
-            'price': 93.72
+            'price': 93.72,
+            'tag': 'Szczytowe'
         },
         {
-            'name': 'NoncnyPozaszczytowy_1',
+            'id': 'NoncnyPozaszczytowy_1',
             'beginDate': np.datetime64('2019-01-01'),
             'endDate': np.datetime64('2019-12-31'),
             'beginHour': '21:00',
             'endHour': '23:59',
-            'price': 93.72
+            'price': 93.72,
+            'tag': 'Pozaszczytowe'
         },
         {
-            'name': 'NoncnyPozaszczytowy_2',
+            'id': 'NoncnyPozaszczytowy_2',
             'beginDate': np.datetime64('2019-01-01'),
             'endDate': np.datetime64('2019-12-31'),
             'beginHour': '00:00',
             'endHour': '07:59',
-            'price': 93.72
+            'price': 93.72,
+            'tag': 'Pozaszczytowe'
         },
         {
-            'name': 'NoncnyPozaszczytowy_3',
+            'id': 'NoncnyPozaszczytowy_3',
             'beginDate': np.datetime64('2019-01-01'),
             'endDate': np.datetime64('2019-03-01') - np.timedelta64(1,'D'),
             'beginHour': '11:00',
             'endHour': '15:59',
-            'price': 47.41
+            'price': 47.41,
+            'tag': 'Pozaszczytowe'
         },
         {
-            'name': 'NoncnyPozaszczytowy_4',
+            'id': 'NoncnyPozaszczytowy_4',
             'beginDate': np.datetime64('2019-03-01'),
             'endDate': np.datetime64('2019-03-31'),
             'beginHour': '11:00',
             'endHour': '17:59',
-            'price': 47.41
+            'price': 47.41,
+            'tag': 'Pozaszczytowe'
         },
         {
-            'name': 'NoncnyPozaszczytowy_5',
+            'id': 'NoncnyPozaszczytowy_5',
             'beginDate': np.datetime64('2019-04-01'),
             'endDate': np.datetime64('2019-04-30'),
             'beginHour': '11:00',
             'endHour': '18:59',
-            'price': 47.41
+            'price': 47.41,
+            'tag': 'Pozaszczytowe'
         },
         {
-            'name': 'NoncnyPozaszczytowy_6',
+            'id': 'NoncnyPozaszczytowy_6',
             'beginDate': np.datetime64('2019-05-01'),
             'endDate': np.datetime64('2019-08-31'),
             'beginHour': '11:00',
             'endHour': '19:59',
-            'price': 47.41
+            'price': 47.41,
+            'tag': 'Pozaszczytowe'
         },
         {
-            'name': 'NoncnyPozaszczytowy_7',
+            'id': 'NoncnyPozaszczytowy_7',
             'beginDate': np.datetime64('2019-09-01'),
             'endDate': np.datetime64('2019-09-30'),
             'beginHour': '11:00',
             'endHour': '18:59',
-            'price': 47.41
+            'price': 47.41,
+            'tag': 'Pozaszczytowe'
         },
         {
-            'name': 'NoncnyPozaszczytowy_8',
+            'id': 'NoncnyPozaszczytowy_8',
             'beginDate': np.datetime64('2019-10-01'),
             'endDate': np.datetime64('2019-10-31'),
             'beginHour': '11:00',
             'endHour': '17:59',
-            'price': 47.41
+            'price': 47.41,
+            'tag': 'Pozaszczytowe'
         },
         {
-            'name': 'NoncnyPozaszczytowy_9',
+            'id': 'NoncnyPozaszczytowy_9',
             'beginDate': np.datetime64('2019-11-01'),
             'endDate': np.datetime64('2019-12-31'),
             'beginHour': '11:00',
             'endHour': '15:59',
-            'price': 47.41
+            'price': 47.41,
+            'tag': 'Pozaszczytowe'
         },
     ]
 }
