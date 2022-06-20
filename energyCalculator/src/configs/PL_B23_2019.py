@@ -18,11 +18,14 @@ varParameters = {
     'tarifName': 'B23',
     'year': 2019,
     'baseVarPrice': 100,
+    'baseVarClassifier': 'Pozaszczytowy',
     'price_Stała': 14.45,
     'price_Przejsciowa': 0.19,
     'price_Jakosciowa': 13.00,
     'price_Abonamentowa': 10.00,
     'diffVarPriceMultiplyer': 0.001, #Mnożnik liczący z Mwh na Kwh
+    'holidaysArray': [],
+    'weekendAsOffPeak': True,
     'diffVarPriceArray': [
         {
             'id': 'Lato_szczyt_przedpołudniowy',

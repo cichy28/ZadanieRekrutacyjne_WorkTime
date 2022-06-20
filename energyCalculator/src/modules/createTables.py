@@ -21,7 +21,6 @@ def createPriceTables(startDate, endDate, deltaInMinutes, varParameters, basicPa
     baseTimePriceArray_df = pd.DataFrame(baseTimePriceArray,
                                          columns=['Timestamp', 'Daytype'])
     pd.to_datetime(baseTimePriceArray_df['Timestamp'])
-
     for index in varParameters['diffVarPriceArray']:
         timeArray = np.append(timeArray,
                         [dt for dt in datetime_test(
@@ -31,7 +30,11 @@ def createPriceTables(startDate, endDate, deltaInMinutes, varParameters, basicPa
                             index['beginHour'],
                             index['endHour'],
                             index['price'],
-                            index['tag']
+                            index['tag'],
+                            varParameters['weekendAsOffPeak'],
+                            varParameters['holidaysArray'],
+                            varParameters['baseVarPrice'],
+                            varParameters['baseVarClassifier']
                             )
                         ],
                     axis=0)
