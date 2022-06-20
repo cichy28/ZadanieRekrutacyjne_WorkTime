@@ -5,20 +5,29 @@ from datetime import datetime, timedelta
 
 # numpy.busday_offset Można zdefiniować 1 a dobrze święta na podstawie tej funkcji
 
-def datetime_test(start, end, delta, begintime, endtime, price, priceClassifier, weekendAsOffPeak, holidaysArray, baseVarPrice, baseVarClassifier):
-    current = start
+def datetime_test(startingTimestamp, endingTimestamp, timestampIncrement, recordConfig, config):
+    currentTimestamp = startingTimestamp
     # Loop thorugh whole dataset
-    while current < end:
-        timestamp = pd.to_datetime(str(current)).strftime("%H:%M")
+    while currentTimestamp < endingTimestamp:
+        timestamp = pd.to_datetime(str(currentTimestamp)).strftime("%H:%M")
         # Check if record is in the scope of config
-        if (time_in_range(begintime, endtime, timestamp)):
-            workDay = np.is_busday(current.astype('datetime64[D]'),holidays=holidaysArray)
+        
+        if (time_in_range(recordConfig['beginHour'], recordConfig['endHour'], timestamp)):
+            workDay = np.is_busday(currentTimestamp.astype('datetime64[D]'),holidays=config['holidaysArray'])
             # Hollidays and weekends as offpeak prices
-            if not workDay and weekendAsOffPeak:
-                yield [current, workDay, baseVarPrice, baseVarClassifier]
+            if not workDay and config['weekendAsOffPeak']:
+                yield [
+                    currentTimestamp,
+                    workDay,
+                    config['varPrices'][recordConfig['offDayPriceTag']],
+                    recordConfig['offDayPriceTag']]
             else:
-                yield [current, workDay, price, priceClassifier]
-        current += delta
+                yield [
+                    currentTimestamp,
+                    workDay,
+                    config['varPrices'][recordConfig['workDayPriceTag']],
+                    recordConfig['workDayPriceTag']]
+        currentTimestamp += timestampIncrement
 
 def datetime_range(start, end, delta):
     current = start

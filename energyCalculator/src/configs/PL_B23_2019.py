@@ -34,7 +34,6 @@ varParameters = {
     'diffVarPriceMultiplyer': 0.001, #Mnożnik liczący z Mwh na Kwh
     'holidaysArray': [],
     'weekendAsOffPeak': True,
-    'tagTypes'
     'varPrices':{
         'offPeak_summer': 19.95,
         'morningPeak_summer': 51.84,
@@ -95,7 +94,7 @@ varParameters = {
             'endDate': np.datetime64('2019-03-31'),
             'beginHour': '07:00',
             'endHour': '12:59',
-            'workDayPriceTag': 'morningPeek_winter',
+            'workDayPriceTag': 'morningPeak_winter',
             'offDayPriceTag': 'offPeak_winter',
         },
         {
@@ -104,7 +103,7 @@ varParameters = {
             'endDate': np.datetime64('2019-03-31'),
             'beginHour': '16:00',
             'endHour': '20:59',
-            'workDayPriceTag': 'afternoonPeek_winter',
+            'workDayPriceTag': 'afternoonPeak_winter',
             'offDayPriceTag': 'offPeak_winter',
         },
         {
@@ -140,7 +139,7 @@ varParameters = {
             'endDate': np.datetime64('2019-12-31'),
             'beginHour': '07:00',
             'endHour': '12:59',
-            'workDayPriceTag': 'morningPeek_winter',
+            'workDayPriceTag': 'morningPeak_winter',
             'offDayPriceTag': 'offPeak_winter',
         },
         {

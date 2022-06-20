@@ -126,7 +126,6 @@ def showPricePerMonth(tarifConfigName, datasetName):
         )
         # Chart with summerized cost
     data = energyCostInTime_df.groupby(['Timestamp']).sum().reset_index()
-    print(data)
     fig.add_trace(
     go.Bar(x= data['Timestamp'],y = data['energyCost'], name='sum'),
         row=3,

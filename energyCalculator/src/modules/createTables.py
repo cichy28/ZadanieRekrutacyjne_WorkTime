@@ -12,7 +12,7 @@ from statistics import mean
 
 
 def createPriceTables(startDate, endDate, deltaInMinutes, varParameters, basicParameters, priceTableName):
-    index = varParameters['diffVarPriceArray'][1]
+    record = varParameters['diffVarPriceArray'][1]
     # Create table with empty records
     timeArray = np.empty([1,4])
     baseTimePriceArray = datetime_range(np.datetime64(startDate),
@@ -21,20 +21,14 @@ def createPriceTables(startDate, endDate, deltaInMinutes, varParameters, basicPa
     baseTimePriceArray_df = pd.DataFrame(baseTimePriceArray,
                                          columns=['Timestamp', 'Daytype'])
     pd.to_datetime(baseTimePriceArray_df['Timestamp'])
-    for index in varParameters['diffVarPriceArray']:
+    for record in varParameters['diffVarPriceArray']:
         timeArray = np.append(timeArray,
                         [dt for dt in datetime_test(
-                            np.datetime64(index['beginDate']),
-                            np.datetime64(index['endDate']),
+                            np.datetime64(record['beginDate']),
+                            np.datetime64(record['endDate']),
                             np.timedelta64(deltaInMinutes,'m'),
-                            index['beginHour'],
-                            index['endHour'],
-                            index['price'],
-                            index['tag'],
-                            varParameters['weekendAsOffPeak'],
-                            varParameters['holidaysArray'],
-                            varParameters['baseVarPrice'],
-                            varParameters['baseVarClassifier']
+                            record,
+                            varParameters
                             )
                         ],
                     axis=0)
@@ -88,7 +82,14 @@ def createCostTable(tarifConfigName, dataTableName, priceTableName, interval):
                    'day': 31}))
     logging.info('Data ' + dataTableName + ' - loaded')
     # Log        
-    createPriceTables(beginDate.iloc[0].strftime('%Y-%m-%d'), endDate.iloc[0].strftime('%Y-%m-%d'),interval, varParameters, basicParameters, priceTableName)     
+    createPriceTables(
+        beginDate.iloc[0].strftime('%Y-%m-%d'),
+        endDate.iloc[0].strftime('%Y-%m-%d'),
+        interval,
+        varParameters,
+        basicParameters,
+        priceTableName)    
+
     energyPricesInTime_df = pd.read_csv("public/energyMeter/" + tarifConfigName)
     print(energyUsageInTime_df)
     print(energyPricesInTime_df)
