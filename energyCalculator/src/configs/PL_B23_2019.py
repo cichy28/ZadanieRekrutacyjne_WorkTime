@@ -1,9 +1,17 @@
+import string
 import numpy as np
+
+   
 # Skrypt wylicza cenwy w pln/kwh
 
 # EO - lato - 1 kwietnia - 30 września
 # EO - Zima_1 - 1 pąździernika - 31marca
 # 
+#to jest tylko przykładowy zahardcodowany config
+# Kolejne JSONY taryfowe trzeba brac już z JS-a - interfacy i walidacje łatwiej do zrobienia
+# intelisensy tez lepsze do ręcznego wbijania configów :D
+
+
 
 basicParameters = {
     'price_Quality': 1,
@@ -26,6 +34,15 @@ varParameters = {
     'diffVarPriceMultiplyer': 0.001, #Mnożnik liczący z Mwh na Kwh
     'holidaysArray': [],
     'weekendAsOffPeak': True,
+    'tagTypes'
+    'varPrices':{
+        'offPeak_summer': 19.95,
+        'morningPeak_summer': 51.84,
+        'afternoonPeak_summer': 63.96,
+        'offPeak_winter': 23.81,
+        'morningPeak_winter': 52.36,
+        'afternoonPeak_winter': 64.03,
+    },
     'diffVarPriceArray': [
         {
             'id': 'Lato_szczyt_przedpołudniowy',
@@ -33,8 +50,8 @@ varParameters = {
             'endDate': np.datetime64('2019-09-30'),
             'beginHour': '07:00',
             'endHour': '12:59',
-            'price': 51.84,
-            'tag': 'Szczyt przepołudniowy'
+            'workDayPriceTag': 'morningPeak_summer',
+            'offDayPriceTag': 'offPeak_summer',
         },
                 {
             'id': 'Lato_szczyt_popołudniowy',
@@ -42,8 +59,8 @@ varParameters = {
             'endDate': np.datetime64('2019-09-30'),
             'beginHour': '19:00',
             'endHour': '21:59',
-            'price': 63.96,
-            'tag': 'Szczyt popołudniowy'
+            'workDayPriceTag': 'afternoonPeak_summer',
+            'offDayPriceTag': 'offPeak_summer',
         },
         {
             'id': 'Lato_pozaszczytowy_1',
@@ -51,8 +68,8 @@ varParameters = {
             'endDate': np.datetime64('2019-09-30'),
             'beginHour': '13:00',
             'endHour': '18:59',
-            'price': 19.95,
-            'tag': 'Pozaszczytowy'
+            'workDayPriceTag': 'offPeak_summer',
+            'offDayPriceTag': 'offPeak_summer',
         },
         {
             'id': 'Lato_pozaszczytowy_2',
@@ -60,8 +77,8 @@ varParameters = {
             'endDate': np.datetime64('2019-09-30'),
             'beginHour': '00:00',
             'endHour': '06:59',
-            'price': 19.95,
-            'tag': 'Pozaszczytowy'
+            'workDayPriceTag': 'offPeak_summer',
+            'offDayPriceTag': 'offPeak_summer',
         },
         {
             'id': 'Lato_pozaszczytowy_3',
@@ -69,8 +86,8 @@ varParameters = {
             'endDate': np.datetime64('2019-09-30'),
             'beginHour': '22:00',
             'endHour': '23:59',
-            'price': 19.95,
-            'tag': 'Pozaszczytowy'
+            'workDayPriceTag': 'offPeak_summer',
+            'offDayPriceTag': 'offPeak_summer',
         },
         {
             'id': 'Zima_1_szczyt_przedpołudniowy',
@@ -78,8 +95,8 @@ varParameters = {
             'endDate': np.datetime64('2019-03-31'),
             'beginHour': '07:00',
             'endHour': '12:59',
-            'price': 52.36,
-            'tag': 'Szczyt przepołudniowy'
+            'workDayPriceTag': 'morningPeek_winter',
+            'offDayPriceTag': 'offPeak_winter',
         },
         {
             'id': 'Zima_1_szczyt_popołudniowy',
@@ -87,8 +104,8 @@ varParameters = {
             'endDate': np.datetime64('2019-03-31'),
             'beginHour': '16:00',
             'endHour': '20:59',
-            'price': 64.03,
-            'tag': 'Szczyt popołudniowy'
+            'workDayPriceTag': 'afternoonPeek_winter',
+            'offDayPriceTag': 'offPeak_winter',
         },
         {
             'id': 'Zima_1_pozaszczytowy_1',
@@ -96,8 +113,8 @@ varParameters = {
             'endDate': np.datetime64('2019-03-31'),
             'beginHour': '13:00',
             'endHour': '15:59',
-            'price': 23.81,
-            'tag': 'Pozaszczytowy'
+            'workDayPriceTag': 'offPeak_winter',
+            'offDayPriceTag': 'offPeak_winter',
         },
         {
             'id': 'Zima_1_pozaszczytowy_2',
@@ -105,8 +122,8 @@ varParameters = {
             'endDate': np.datetime64('2019-03-31'),
             'beginHour': '00:00',
             'endHour': '06:59',
-            'price': 23.81,
-            'tag': 'Pozaszczytowy'
+            'workDayPriceTag': 'offPeak_winter',
+            'offDayPriceTag': 'offPeak_winter',
         },
         {
             'id': 'Zima_1_pozaszczytowy_3',
@@ -114,8 +131,8 @@ varParameters = {
             'endDate': np.datetime64('2019-03-31'),
             'beginHour': '21:00',
             'endHour': '23:59',
-            'price': 23.81,
-            'tag': 'Pozaszczytowy'
+            'workDayPriceTag': 'offPeak_winter',
+            'offDayPriceTag': 'offPeak_winter',
         },
         {
             'id': 'Zima_2_szczyt_przedpołudniowy',
@@ -123,8 +140,8 @@ varParameters = {
             'endDate': np.datetime64('2019-12-31'),
             'beginHour': '07:00',
             'endHour': '12:59',
-            'price': 52.36,
-            'tag': 'Szczyt przepołudniowy'
+            'workDayPriceTag': 'morningPeek_winter',
+            'offDayPriceTag': 'offPeak_winter',
         },
         {
             'id': 'Zima_2_szczyt_popołudniowy',
@@ -132,8 +149,8 @@ varParameters = {
             'endDate': np.datetime64('2019-12-31'),
             'beginHour': '16:00',
             'endHour': '20:59',
-            'price': 64.03,
-            'tag': 'Szczyt popołudniowy'
+            'workDayPriceTag': 'afternoonPeak_winter',
+            'offDayPriceTag': 'offPeak_winter',
         },
         {
             'id': 'Zima_2_pozaszczytowy_1',
@@ -141,8 +158,8 @@ varParameters = {
             'endDate': np.datetime64('2019-12-31'),
             'beginHour': '13:00',
             'endHour': '15:59',
-            'price': 23.81,
-            'tag': 'Pozaszczytowy'
+            'workDayPriceTag': 'offPeak_winter',
+            'offDayPriceTag': 'offPeak_winter',
         },
         {
             'id': 'Zima_2_pozaszczytowy_2',
@@ -150,8 +167,8 @@ varParameters = {
             'endDate': np.datetime64('2019-12-31'),
             'beginHour': '00:00',
             'endHour': '06:59',
-            'price': 23.81,
-            'tag': 'Pozaszczytowy'
+            'workDayPriceTag': 'offPeak_winter',
+            'offDayPriceTag': 'offPeak_winter',
         },
         {
             'id': 'Zima_2_pozaszczytowy_3',
@@ -159,8 +176,8 @@ varParameters = {
             'endDate': np.datetime64('2019-12-31'),
             'beginHour': '21:00',
             'endHour': '23:59',
-            'price': 23.81,
-            'tag': 'Pozaszczytowy'
+            'workDayPriceTag': 'offPeak_winter',
+            'offDayPriceTag': 'offPeak_winter',
         },
         
     ]
